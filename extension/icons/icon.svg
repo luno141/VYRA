@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <defs>
+    <!-- Main shield gradient -->
+    <linearGradient id="shieldGrad" x1="14" y1="6" x2="114" y2="122" gradientUnits="userSpaceOnUse">
+      <stop offset="0%"   stop-color="#4f8ef7"/>
+      <stop offset="55%"  stop-color="#7b61ff"/>
+      <stop offset="100%" stop-color="#9b59b6"/>
+    </linearGradient>
+    <!-- Gloss overlay -->
+    <linearGradient id="gloss" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#ffffff" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.00"/>
+    </linearGradient>
+    <!-- Shadow filter -->
+    <filter id="shadow" x="-20%" y="-10%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#4f8ef7" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+
+  <!-- Shield body -->
+  <path
+    d="M64 6 L14 26 L14 62 C14 90 36 114 64 122 C92 114 114 90 114 62 L114 26 Z"
+    fill="url(#shieldGrad)"
+    filter="url(#shadow)"
+  />
+
+  <!-- Gloss highlight -->
+  <path
+    d="M64 6 L14 26 L14 62 C14 90 36 114 64 122 C92 114 114 90 114 62 L114 26 Z"
+    fill="url(#gloss)"
+  />
+
+  <!-- Inner shield border (subtle) -->
+  <path
+    d="M64 14 L20 32 L20 62 C20 87 40 109 64 116 C88 109 108 87 108 62 L108 32 Z"
+    fill="none"
+    stroke="rgba(255,255,255,0.15)"
+    stroke-width="1.5"
+  />
+
+  <!-- Check mark -->
+  <polyline
+    points="42,66 56,80 88,50"
+    fill="none"
+    stroke="#ffffff"
+    stroke-width="9"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    opacity="0.95"
+  />
+
+  <!-- "V" letter subtle watermark (VYRA branding) -->
+  <text
+    x="64" y="104"
+    text-anchor="middle"
+    font-family="'Segoe UI', Arial, sans-serif"
+    font-size="11"
+    font-weight="900"
+    fill="rgba(255,255,255,0.22)"
+    letter-spacing="3"
+  >VYRA</text>
+</svg>
