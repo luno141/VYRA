@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #fdfbf7;
-  --foreground: #09090b;
+  --background: #090a0f;
+  --foreground: #ffffff;
   --neo-black: #000000;
   --neo-yellow: #facc15;
   --neo-lime: #ccff00;
@@ -12,16 +12,16 @@
 }
 
 body {
-  background-color: #f6f5f0;
-  color: #09090b;
+  background-color: #090a0f;
+  color: #ffffff;
   font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   overflow-x: hidden;
 }
 
-/* Neo-Brutalist Dot Matrix Canvas */
+/* Dark Neo-Brutalist Dot Matrix Canvas */
 .neo-grid {
   background-size: 24px 24px;
-  background-image: radial-gradient(#00000022 1.5px, transparent 1.5px);
+  background-image: radial-gradient(rgba(255, 255, 255, 0.12) 1.5px, transparent 1.5px);
 }
 
 /* Neo-Brutalist Striped Hazard Bars */
@@ -30,16 +30,6 @@ body {
     -45deg,
     #ff3366,
     #ff3366 12px,
-    #000000 12px,
-    #000000 24px
-  );
-}
-
-.neo-hazard-yellow {
-  background: repeating-linear-gradient(
-    -45deg,
-    #facc15,
-    #facc15 12px,
     #000000 12px,
     #000000 24px
   );
@@ -55,40 +45,52 @@ body {
   );
 }
 
-/* Tactile Brutalist Helpers */
+.neo-hazard-yellow {
+  background: repeating-linear-gradient(
+    -45deg,
+    #facc15,
+    #facc15 12px,
+    #000000 12px,
+    #000000 24px
+  );
+}
+
+/* Dark Neo-Brutalist Card Helpers */
 .neo-card {
   background-color: #ffffff;
+  color: #000000;
   border: 3px solid #000000;
-  box-shadow: 5px 5px 0px 0px #000000;
+  box-shadow: 6px 6px 0px 0px #ffffff;
 }
 
 .neo-card-sm {
   background-color: #ffffff;
+  color: #000000;
   border: 2px solid #000000;
-  box-shadow: 3px 3px 0px 0px #000000;
+  box-shadow: 4px 4px 0px 0px #ffffff;
 }
 
 .neo-btn {
   border: 3px solid #000000;
-  box-shadow: 4px 4px 0px 0px #000000;
+  box-shadow: 4px 4px 0px 0px #ffffff;
   transition: all 0.12s cubic-bezier(0.4, 0, 0.2, 1);
   font-weight: 800;
 }
 
 .neo-btn:hover {
   transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0px 0px #000000;
+  box-shadow: 6px 6px 0px 0px #ffffff;
 }
 
 .neo-btn:active {
   transform: translate(2px, 2px);
-  box-shadow: 1px 1px 0px 0px #000000;
+  box-shadow: 1px 1px 0px 0px #ffffff;
 }
 
 .neo-badge {
   border: 2px solid #000000;
-  box-shadow: 2px 2px 0px 0px #000000;
-  font-weight: 700;
+  box-shadow: 2px 2px 0px 0px rgba(255, 255, 255, 0.8);
+  font-weight: 800;
   font-family: var(--font-geist-mono), monospace;
 }
 
@@ -99,8 +101,8 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #f6f5f0;
-  border-left: 2px solid #000000;
+  background: #090a0f;
+  border-left: 2px solid #ffffff;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -109,5 +111,5 @@ body {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #000000;
+  background: #ccff00;
 }

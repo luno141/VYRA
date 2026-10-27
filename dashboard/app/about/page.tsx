@@ -20,23 +20,23 @@ export default function AboutPage() {
     <div className="space-y-10 max-w-5xl mx-auto py-4">
       {/* Hero Overview */}
       <div className="space-y-4">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#facc15] border-2 border-black font-mono text-xs font-black uppercase shadow-[3px_3px_0px_0px_#000]">
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#facc15] border-2 border-black font-mono text-xs font-black uppercase shadow-[3px_3px_0px_0px_#ffffff]">
           <Terminal className="w-3.5 h-3.5 text-black" />
-          <span>ACADEMIC THESIS // SYSTEM ARCHITECTURE SPECIFICATION</span>
+          <span className="text-black">ACADEMIC THESIS // SYSTEM ARCHITECTURE SPECIFICATION</span>
         </div>
 
-        <h1 className="text-4xl sm:text-6xl font-black tracking-tight text-black font-mono leading-none">
+        <h1 className="text-4xl sm:text-6xl font-black tracking-tight text-white font-mono leading-none">
           ABOUT{' '}
-          <span className="bg-[#ccff00] px-2 py-0.5 border-2 border-black shadow-[4px_4px_0px_0px_#000] inline-block -rotate-1">
+          <span className="bg-[#ccff00] text-black px-2 py-0.5 border-2 border-black shadow-[4px_4px_0px_0px_#ffffff] inline-block -rotate-1">
             VYRA
           </span>
         </h1>
 
-        <div className="text-xl font-mono font-black text-black">
+        <div className="text-xl font-mono font-black text-zinc-200">
           Verifiable Yield Risk Assessment &amp; Real-Time Phishing Defense
         </div>
 
-        <p className="text-black font-mono font-bold text-sm leading-relaxed max-w-4xl bg-white p-4 border-2 border-black shadow-[4px_4px_0px_0px_#000]">
+        <p className="text-black font-mono font-bold text-sm leading-relaxed max-w-4xl bg-white p-5 border-[3px] border-white shadow-[6px_6px_0px_0px_#facc15]">
           VYRA is an advanced cybersecurity engineering framework developed to counter modern evasive
           credential harvesting, zero-day phishing infrastructure, and cloud abuse. By synthesizing
           35-dimensional lexical feature extraction, explainable machine learning (TreeSHAP), and an
@@ -46,7 +46,7 @@ export default function AboutPage() {
       </div>
 
       {/* Research Objective Card */}
-      <div className="neo-card p-6 sm:p-8 bg-[#fdfbf7] space-y-4">
+      <div className="neo-card p-6 sm:p-8 bg-white border-[3px] border-white shadow-[6px_6px_0px_0px_#38bdf8] space-y-4">
         <div className="flex items-center gap-2">
           <GraduationCap className="w-6 h-6 text-black" />
           <h2 className="text-lg font-black font-mono uppercase tracking-wider text-black">
@@ -55,7 +55,7 @@ export default function AboutPage() {
         </div>
 
         <div className="text-xs sm:text-sm font-mono font-bold text-black space-y-3 leading-relaxed">
-          <p className="p-3 bg-white border-2 border-black">
+          <p className="p-3 bg-[#f6f5f0] border-2 border-black">
             <span className="bg-black text-white px-1.5 py-0.5 mr-2">THESIS TITLE:</span>
             Explainable Artificial Intelligence and Blockchain-Integrated Framework for Real-Time Detection and Prevention of Previously Unseen Phishing Attacks.
           </p>
@@ -75,7 +75,7 @@ export default function AboutPage() {
       </div>
 
       {/* Architecture Pipeline Boxes */}
-      <div className="neo-card p-6 sm:p-8 bg-white space-y-6">
+      <div className="neo-card p-6 sm:p-8 bg-white border-[3px] border-white shadow-[6px_6px_0px_0px_#ccff00] space-y-6">
         <div>
           <h2 className="text-lg font-black font-mono uppercase tracking-wider text-black flex items-center gap-2">
             <Layers className="w-5 h-5 text-black" />
@@ -155,7 +155,7 @@ export default function AboutPage() {
 
       {/* Technical Specifications Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 font-mono text-xs">
-        <div className="neo-card p-5 bg-[#facc15] space-y-3">
+        <div className="neo-card p-5 bg-[#facc15] border-[3px] border-white shadow-[6px_6px_0px_0px_#ffffff] space-y-3">
           <div className="font-black text-sm uppercase text-black border-b-2 border-black pb-2">
             MODEL ARCHITECTURE
           </div>
@@ -168,7 +168,7 @@ export default function AboutPage() {
           </ul>
         </div>
 
-        <div className="neo-card p-5 bg-[#38bdf8] space-y-3">
+        <div className="neo-card p-5 bg-[#38bdf8] border-[3px] border-white shadow-[6px_6px_0px_0px_#ffffff] space-y-3">
           <div className="font-black text-sm uppercase text-black border-b-2 border-black pb-2">
             BLOCKCHAIN ENGINE
           </div>
@@ -181,7 +181,7 @@ export default function AboutPage() {
           </ul>
         </div>
 
-        <div className="neo-card p-5 bg-[#ff3366] text-white space-y-3">
+        <div className="neo-card p-5 bg-[#ff3366] text-white border-[3px] border-white shadow-[6px_6px_0px_0px_#ffffff] space-y-3">
           <div className="font-black text-sm uppercase text-white border-b-2 border-white pb-2">
             THREAT INTELLIGENCE
           </div>

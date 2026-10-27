@@ -71,10 +71,10 @@ export default function BlockchainPage() {
             <Lock className="w-3 h-3 text-black" />
             <span>PROOF-OF-WORK // SHA-256 AUDIT TRAIL</span>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-black font-mono text-black uppercase tracking-tight">
+          <h1 className="text-3xl sm:text-4xl font-black font-mono text-white uppercase tracking-tight">
             Blockchain Audit Ledger
           </h1>
-          <p className="text-xs font-mono font-bold text-zinc-600 mt-1">
+          <p className="text-xs font-mono font-bold text-zinc-300 mt-1">
             Tamper-evident, cryptographically linked notarization blocks securing every prediction
           </p>
         </div>
@@ -83,7 +83,7 @@ export default function BlockchainPage() {
           <button
             onClick={fetchBlocks}
             disabled={loading}
-            className="neo-btn flex items-center gap-2 px-3 py-2 bg-white text-black font-mono text-xs font-black uppercase cursor-pointer"
+            className="neo-btn flex items-center gap-2 px-3 py-2 bg-white text-black font-mono text-xs font-black uppercase cursor-pointer border-2 border-white shadow-[3px_3px_0px_0px_#facc15] hover:bg-zinc-200"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin text-black' : ''}`} />
             <span>SYNC NODE</span>
@@ -92,7 +92,7 @@ export default function BlockchainPage() {
           <button
             onClick={handleVerify}
             disabled={verifying}
-            className="neo-btn flex items-center gap-2 px-4 py-2 bg-[#ccff00] text-black font-mono text-xs font-black uppercase cursor-pointer disabled:opacity-60"
+            className="neo-btn flex items-center gap-2 px-4 py-2 bg-[#ccff00] text-black font-mono text-xs font-black uppercase cursor-pointer disabled:opacity-60 border-2 border-white shadow-[3px_3px_0px_0px_#ffffff] hover:bg-[#b8e600]"
           >
             {verifying ? (
               <>
@@ -112,7 +112,7 @@ export default function BlockchainPage() {
       {/* Chain Verification Status Card */}
       {verifyResult && (
         <div
-          className={`neo-card p-6 border-[3px] border-black ${
+          className={`neo-card p-6 border-[3px] border-white shadow-[6px_6px_0px_0px_#ffffff] ${
             verifyResult.is_valid
               ? 'bg-[#22c55e] text-black'
               : 'bg-[#ff3366] text-white'
@@ -134,7 +134,7 @@ export default function BlockchainPage() {
                 </span>
                 <h3 className="text-xl sm:text-2xl font-black font-mono uppercase tracking-tight mt-1">
                   {verifyResult.is_valid
-                    ? 'Cryptographic Ledger Immutable &amp; Valid'
+                    ? 'Cryptographic Ledger Immutable & Valid'
                     : 'Cryptographic Hash Mismatch Detected'}
                 </h3>
                 <p className="text-xs font-mono font-bold mt-1 max-w-2xl opacity-90">
@@ -155,7 +155,7 @@ export default function BlockchainPage() {
       {/* Block Sequence (Neo-Brutalist Concrete Tiles) */}
       <div className="space-y-6">
         {loading && blocks.length === 0 ? (
-          <div className="neo-card p-12 text-center font-mono font-bold text-sm text-black">
+          <div className="bg-[#141624] border-2 border-white p-12 text-center font-mono font-bold text-sm text-white">
             LOADING BLOCKCHAIN LEDGER...
           </div>
         ) : (
@@ -165,7 +165,7 @@ export default function BlockchainPage() {
 
             return (
               <div key={block.index} className="space-y-4">
-                <div className="neo-card p-6 bg-white border-[3px] border-black space-y-5">
+                <div className="neo-card p-6 bg-white border-[3px] border-white shadow-[6px_6px_0px_0px_#facc15] space-y-5">
                   {/* Block Header */}
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b-2 border-black gap-2">
                     <div className="flex items-center gap-3">
