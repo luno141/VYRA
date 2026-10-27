@@ -27,7 +27,15 @@ interface ScanResultProps {
 export default function ScanResult({ result }: ScanResultProps) {
   const [copiedHash, setCopiedHash] = useState<string | null>(null);
 
-  const isPhishing = result.verdict === 'PHISHING';
+  const isPhishing =
+    result.verdict === 'PHISHING' ||
+    String((result as any).prediction || '').toUpperCase() === 'PHISHING' ||
+    result.risk_score >= 50;
+
+  const displayConfidence =
+    result.confidence <= 1
+      ? (result.confidence * 100).toFixed(1)
+      : Number(result.confidence).toFixed(1);
 
   const copyToClipboard = (text: string, label: string) => {
     navigator.clipboard.writeText(text);
@@ -74,7 +82,7 @@ export default function ScanResult({ result }: ScanResultProps) {
                       : 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40'
                   }`}
                 >
-                  {result.verdict}
+                  {isPhishing ? 'PHISHING' : 'LEGITIMATE'}
                 </span>
 
                 <span className="text-xs font-mono text-gray-400 flex items-center gap-1">
@@ -96,7 +104,7 @@ export default function ScanResult({ result }: ScanResultProps) {
               <h2 className="text-2xl font-bold text-gray-100 mt-2 flex items-center gap-2">
                 {isPhishing ? 'Deceptive Phishing Destination' : 'Legitimate Verified Destination'}
                 <span className="text-sm font-semibold text-gray-400 font-mono">
-                  ({result.confidence}% confidence)
+                  ({displayConfidence}% confidence)
                 </span>
               </h2>
 
@@ -119,7 +127,7 @@ export default function ScanResult({ result }: ScanResultProps) {
           <div className="flex items-center gap-3 shrink-0">
             <div className="bg-gray-950/80 p-3 rounded-xl border border-gray-800 text-center min-w-[100px]">
               <div className="text-[10px] uppercase tracking-wider text-gray-400 font-medium">Confidence</div>
-              <div className="text-xl font-bold font-mono text-gray-100">{result.confidence}%</div>
+              <div className="text-xl font-bold font-mono text-gray-100">{displayConfidence}%</div>
             </div>
             <div className="bg-gray-950/80 p-3 rounded-xl border border-gray-800 text-center min-w-[100px]">
               <div className="text-[10px] uppercase tracking-wider text-gray-400 font-medium">Risk Score</div>
