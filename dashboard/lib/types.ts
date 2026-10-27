@@ -17,6 +17,8 @@ export interface ThreatIntelResult {
   threat_types?: string[];
   virustotal_positives?: number;
   virustotal_total?: number;
+  threat_feeds_result?: Record<string, { detected: boolean; details: string }>;
+  sources_checked?: string[];
 }
 
 export interface BlockchainCommitment {

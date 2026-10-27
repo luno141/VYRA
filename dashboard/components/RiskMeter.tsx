@@ -51,7 +51,7 @@ export default function RiskMeter({ score, verdict }: RiskMeterProps) {
   const activeSegments = Math.round((normalizedScore / 100) * totalSegments);
 
   return (
-    <div className="neo-card p-6 bg-white space-y-5">
+    <div className="neo-card p-6 bg-white border-[3px] border-white shadow-[6px_6px_0px_0px_#facc15] space-y-5">
       {/* Header */}
       <div className="flex items-center justify-between pb-3 border-b-2 border-black">
         <div className="flex items-center gap-2">

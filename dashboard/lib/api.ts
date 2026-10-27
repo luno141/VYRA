@@ -431,6 +431,8 @@ export function mapBackendScanResult(data: any): ScanResult {
       : [],
     virustotal_positives: rawTi.virustotal_positives ?? (isPhish ? 16 : 0),
     virustotal_total: 88,
+    threat_feeds_result: rawTi.threat_feeds_result,
+    sources_checked: rawTi.sources_checked,
   };
 
   // Map Blockchain Commitment

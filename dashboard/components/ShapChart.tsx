@@ -37,7 +37,7 @@ export default function ShapChart({
   const maxAbs = Math.max(...displayFeatures.map((f) => Math.abs(f.contribution)), 0.01);
 
   return (
-    <div className="neo-card p-6 bg-white space-y-6">
+    <div className="neo-card p-6 bg-white border-[3px] border-white shadow-[6px_6px_0px_0px_#ccff00] space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b-2 border-black gap-2">
         <div>

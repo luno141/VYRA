@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { scanUrl, getStats } from '../lib/api';
 import { ScanResult as ScanResultType, Stats } from '../lib/types';
 import ScanResult from '../components/ScanResult';
@@ -15,6 +15,8 @@ import {
   Terminal,
   Activity,
   AlertOctagon,
+  Cpu,
+  Lock,
 } from 'lucide-react';
 
 export default function ScannerPage() {
@@ -24,6 +26,7 @@ export default function ScannerPage() {
   const [error, setError] = useState<string | null>(null);
   const [stats, setStats] = useState<Stats | null>(null);
   const [statsLoading, setStatsLoading] = useState(true);
+  const resultRef = useRef<HTMLDivElement>(null);
 
   // Load telemetry stats on mount
   useEffect(() => {
@@ -41,8 +44,15 @@ export default function ScannerPage() {
   }, []);
 
   const handleScan = async (targetUrl?: string) => {
-    const urlToScan = (targetUrl || url).trim();
-    if (!urlToScan) return;
+    const rawUrl = (targetUrl || url).trim();
+    if (!rawUrl) return;
+
+    // Automatic protocol normalization
+    let urlToScan = rawUrl;
+    if (!urlToScan.startsWith('http://') && !urlToScan.startsWith('https://')) {
+      urlToScan = `https://${urlToScan}`;
+      setUrl(urlToScan);
+    }
 
     setScanning(true);
     setError(null);
@@ -51,6 +61,10 @@ export default function ScannerPage() {
     try {
       const data = await scanUrl(urlToScan);
       setResult(data);
+      // Smooth scroll to results
+      setTimeout(() => {
+        resultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 150);
       // Refresh stats
       const updatedStats = await getStats();
       setStats(updatedStats);
@@ -97,7 +111,7 @@ export default function ScannerPage() {
 
       {/* Main Scanner Input (High Contrast Brutalist Card) */}
       <div className="max-w-4xl mx-auto">
-        <div className="p-4 sm:p-5 bg-white border-[3px] border-black shadow-[6px_6px_0px_0px_#facc15] relative text-black">
+        <div className="p-4 sm:p-5 bg-white border-[3px] border-white shadow-[6px_6px_0px_0px_#facc15] relative text-black">
           <div className="flex flex-col sm:flex-row items-stretch gap-3">
             <div className="relative flex-1 flex items-center bg-[#fdfbf7] border-2 border-black px-4 py-3 shadow-[inset_2px_2px_0px_rgba(0,0,0,0.1)]">
               <span className="font-mono font-black text-sm text-black mr-2 shrink-0 select-none">
@@ -115,7 +129,7 @@ export default function ScannerPage() {
               {url && (
                 <button
                   onClick={() => setUrl('')}
-                  className="px-2 py-1 bg-black text-white text-[10px] font-mono font-bold hover:bg-zinc-800"
+                  className="px-2 py-1 bg-black text-white text-[10px] font-mono font-bold hover:bg-zinc-800 cursor-pointer"
                 >
                   CLEAR
                 </button>
@@ -151,7 +165,7 @@ export default function ScannerPage() {
             <button
               onClick={() => setSampleUrl('https://paypal-security-account-update.info/login.php')}
               disabled={scanning}
-              className="px-2.5 py-1 bg-[#ff4365] text-white border-2 border-black shadow-[2px_2px_0px_0px_#000] hover:bg-black font-bold transition-all"
+              className="px-2.5 py-1 bg-[#ff4365] text-white border-2 border-black shadow-[2px_2px_0px_0px_#000] hover:bg-black font-bold transition-all cursor-pointer active:translate-x-[1px] active:translate-y-[1px]"
             >
               ⚠️ PAYPAL PHISHING DEMO
             </button>
@@ -159,7 +173,7 @@ export default function ScannerPage() {
             <button
               onClick={() => setSampleUrl('http://apple-id-verification-support.servehttp.com/auth')}
               disabled={scanning}
-              className="px-2.5 py-1 bg-[#fb923c] text-black border-2 border-black shadow-[2px_2px_0px_0px_#000] hover:bg-black hover:text-white font-bold transition-all"
+              className="px-2.5 py-1 bg-[#fb923c] text-black border-2 border-black shadow-[2px_2px_0px_0px_#000] hover:bg-black hover:text-white font-bold transition-all cursor-pointer active:translate-x-[1px] active:translate-y-[1px]"
             >
               ⚠️ DYNAMIC DNS ATTACK
             </button>
@@ -167,7 +181,7 @@ export default function ScannerPage() {
             <button
               onClick={() => setSampleUrl('https://github.com/torvalds/linux')}
               disabled={scanning}
-              className="px-2.5 py-1 bg-[#22c55e] text-black border-2 border-black shadow-[2px_2px_0px_0px_#000] hover:bg-black hover:text-white font-bold transition-all"
+              className="px-2.5 py-1 bg-[#22c55e] text-black border-2 border-black shadow-[2px_2px_0px_0px_#000] hover:bg-black hover:text-white font-bold transition-all cursor-pointer active:translate-x-[1px] active:translate-y-[1px]"
             >
               🛡️ OFFICIAL GITHUB REPO
             </button>
@@ -175,16 +189,47 @@ export default function ScannerPage() {
             <button
               onClick={() => setSampleUrl('https://en.wikipedia.org/wiki/Computer_science')}
               disabled={scanning}
-              className="px-2.5 py-1 bg-[#38bdf8] text-black border-2 border-black shadow-[2px_2px_0px_0px_#000] hover:bg-black hover:text-white font-bold transition-all"
+              className="px-2.5 py-1 bg-[#38bdf8] text-black border-2 border-black shadow-[2px_2px_0px_0px_#000] hover:bg-black hover:text-white font-bold transition-all cursor-pointer active:translate-x-[1px] active:translate-y-[1px]"
             >
               🛡️ WIKIPEDIA ARTICLE
             </button>
           </div>
         </div>
 
+        {/* Live Analysis Pipeline Flow Indicator (Shown while scanning) */}
+        {scanning && (
+          <div className="mt-4 p-4 bg-[#141624] border-2 border-white shadow-[4px_4px_0px_0px_#ccff00] text-white font-mono space-y-3 animate-in fade-in duration-200">
+            <div className="flex items-center justify-between text-xs font-black">
+              <span className="flex items-center gap-2 text-[#ccff00]">
+                <Loader2 className="w-4 h-4 animate-spin" />
+                EXECUTION PIPELINE IN PROGRESS
+              </span>
+              <span className="text-zinc-400 text-[10px]">INFERENCE LATENCY: &lt; 30MS</span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-4 gap-2 text-[11px] font-bold">
+              <div className="p-2 bg-[#1d2136] border border-zinc-700 flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#38bdf8] animate-ping" />
+                <span>1. 35-D VECTORS</span>
+              </div>
+              <div className="p-2 bg-[#1d2136] border border-zinc-700 flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#facc15] animate-pulse" />
+                <span>2. XGBOOST INFERENCE</span>
+              </div>
+              <div className="p-2 bg-[#1d2136] border border-zinc-700 flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#ff3366] animate-pulse" />
+                <span>3. TREESHAP ATTRIBUTION</span>
+              </div>
+              <div className="p-2 bg-[#1d2136] border border-zinc-700 flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#ccff00] animate-pulse" />
+                <span>4. PoW SHA-256 BLOCK</span>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Error notification banner */}
         {error && (
-          <div className="mt-4 p-4 bg-[#ff3366] text-white border-2 border-black shadow-[4px_4px_0px_0px_#ffffff] flex items-center gap-3">
+          <div className="mt-4 p-4 bg-[#ff3366] text-white border-2 border-white shadow-[4px_4px_0px_0px_#ffffff] flex items-center gap-3">
             <AlertOctagon className="w-6 h-6 shrink-0" />
             <div className="font-mono text-sm font-black">{error}</div>
           </div>
@@ -193,7 +238,7 @@ export default function ScannerPage() {
 
       {/* Scanned Result Output */}
       {result && (
-        <div className="max-w-7xl mx-auto">
+        <div ref={resultRef} className="max-w-7xl mx-auto scroll-mt-24">
           <ScanResult result={result} />
         </div>
       )}
@@ -207,7 +252,7 @@ export default function ScannerPage() {
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Card 1: Total Scans */}
-          <div className="p-4 bg-[#facc15] text-black border-2 border-black shadow-[4px_4px_0px_0px_#ffffff]">
+          <div className="p-4 bg-[#facc15] text-black border-[3px] border-white shadow-[6px_6px_0px_0px_#ffffff]">
             <div className="text-[11px] font-mono font-black uppercase tracking-wider text-black">
               TOTAL SCANS LOGGED
             </div>
@@ -220,7 +265,7 @@ export default function ScannerPage() {
           </div>
 
           {/* Card 2: Threats Stopped */}
-          <div className="p-4 bg-[#ff3366] text-white border-2 border-black shadow-[4px_4px_0px_0px_#ffffff]">
+          <div className="p-4 bg-[#ff3366] text-white border-[3px] border-white shadow-[6px_6px_0px_0px_#ffffff]">
             <div className="text-[11px] font-mono font-black uppercase tracking-wider text-white">
               THREATS DETECTED
             </div>
@@ -233,7 +278,7 @@ export default function ScannerPage() {
           </div>
 
           {/* Card 3: Detection Rate */}
-          <div className="p-4 bg-[#22c55e] text-black border-2 border-black shadow-[4px_4px_0px_0px_#ffffff]">
+          <div className="p-4 bg-[#22c55e] text-black border-[3px] border-white shadow-[6px_6px_0px_0px_#ffffff]">
             <div className="text-[11px] font-mono font-black uppercase tracking-wider text-black">
               LIVE ACCURACY RATE
             </div>
@@ -246,7 +291,7 @@ export default function ScannerPage() {
           </div>
 
           {/* Card 4: Blockchain Blocks */}
-          <div className="p-4 bg-[#c084fc] text-black border-2 border-black shadow-[4px_4px_0px_0px_#ffffff]">
+          <div className="p-4 bg-[#c084fc] text-black border-[3px] border-white shadow-[6px_6px_0px_0px_#ffffff]">
             <div className="text-[11px] font-mono font-black uppercase tracking-wider text-black">
               BLOCKCHAIN HEIGHT
             </div>

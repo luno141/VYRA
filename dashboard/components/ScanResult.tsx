@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { ScanResult as ScanResultType } from '../lib/types';
 import RiskMeter from './RiskMeter';
 import ShapChart from './ShapChart';
@@ -19,7 +20,13 @@ import {
   Cpu,
   AlertTriangle,
   Terminal,
-  FileCheck2,
+  FileCode,
+  Binary,
+  ChevronDown,
+  ChevronUp,
+  Search,
+  CheckCircle2,
+  Share2,
 } from 'lucide-react';
 
 interface ScanResultProps {
@@ -27,7 +34,9 @@ interface ScanResultProps {
 }
 
 export default function ScanResult({ result }: ScanResultProps) {
-  const [copiedHash, setCopiedHash] = useState<string | null>(null);
+  const [copiedLabel, setCopiedLabel] = useState<string | null>(null);
+  const [showFeatures, setShowFeatures] = useState(false);
+  const [featureSearch, setFeatureSearch] = useState('');
 
   const isPhishing =
     result.verdict === 'PHISHING' ||
@@ -41,15 +50,24 @@ export default function ScanResult({ result }: ScanResultProps) {
 
   const copyToClipboard = (text: string, label: string) => {
     navigator.clipboard.writeText(text);
-    setCopiedHash(label);
-    setTimeout(() => setCopiedHash(null), 2000);
+    setCopiedLabel(label);
+    setTimeout(() => setCopiedLabel(null), 2000);
   };
+
+  const copyJsonReport = () => {
+    copyToClipboard(JSON.stringify(result, null, 2), 'json_report');
+  };
+
+  // Extract all 35 features if present
+  const featuresList = Object.entries(result.extracted_features || {}).filter(([key]) =>
+    key.toLowerCase().includes(featureSearch.toLowerCase())
+  );
 
   return (
     <div className="w-full space-y-8 animate-in fade-in duration-300">
-      {/* Top Verdict Banner (Neo-Brutalist High Impact Card) */}
+      {/* Top Verdict Banner (Neo-Brutalist High Impact Card with White Border & Shadow) */}
       <div
-        className={`neo-card relative overflow-hidden p-6 sm:p-8 ${
+        className={`neo-card relative overflow-hidden p-6 sm:p-8 border-[3px] border-white shadow-[6px_6px_0px_0px_#ffffff] ${
           isPhishing ? 'bg-[#ff3366] text-white' : 'bg-[#22c55e] text-black'
         }`}
       >
@@ -105,17 +123,17 @@ export default function ScanResult({ result }: ScanResultProps) {
                 <span className="truncate select-all">{result.url}</span>
                 <button
                   onClick={() => copyToClipboard(result.url, 'url')}
-                  className="p-1 bg-black text-white hover:bg-zinc-800 transition-colors ml-auto shrink-0"
+                  className="p-1 bg-black text-white hover:bg-zinc-800 transition-colors ml-auto shrink-0 cursor-pointer"
                   title="Copy URL"
                 >
-                  {copiedHash === 'url' ? <Check className="w-3.5 h-3.5 text-[#22c55e]" /> : <Copy className="w-3.5 h-3.5" />}
+                  {copiedLabel === 'url' ? <Check className="w-3.5 h-3.5 text-[#22c55e]" /> : <Copy className="w-3.5 h-3.5" />}
                 </button>
               </div>
             </div>
           </div>
 
-          {/* Quick Metrics Badges */}
-          <div className="flex items-center gap-3 shrink-0">
+          {/* Quick Metrics Badges & Action Toolbar */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 shrink-0">
             <div className="bg-white text-black p-3.5 border-2 border-black shadow-[4px_4px_0px_0px_#000] text-center min-w-[110px]">
               <div className="text-[10px] uppercase font-mono font-black text-zinc-500">CONFIDENCE</div>
               <div className="text-2xl font-black font-mono">{displayConfidence}%</div>
@@ -131,7 +149,93 @@ export default function ScanResult({ result }: ScanResultProps) {
             </div>
           </div>
         </div>
+
+        {/* Quick Action Buttons inside Banner */}
+        <div className="mt-6 pt-4 border-t-2 border-black flex flex-wrap items-center justify-between gap-3 text-xs font-mono font-black">
+          <div className="flex items-center gap-2 flex-wrap">
+            <button
+              onClick={copyJsonReport}
+              className="px-3 py-1.5 bg-black text-white border-2 border-black shadow-[2px_2px_0px_0px_#000] hover:bg-zinc-800 flex items-center gap-1.5 cursor-pointer transition-all"
+            >
+              {copiedLabel === 'json_report' ? (
+                <>
+                  <Check className="w-3.5 h-3.5 text-[#22c55e]" />
+                  <span>REPORT COPIED!</span>
+                </>
+              ) : (
+                <>
+                  <FileCode className="w-3.5 h-3.5" />
+                  <span>EXPORT AUDIT JSON</span>
+                </>
+              )}
+            </button>
+
+            {result.blockchain && (
+              <Link
+                href="/blockchain"
+                className="px-3 py-1.5 bg-white text-black border-2 border-black shadow-[2px_2px_0px_0px_#000] hover:bg-zinc-200 flex items-center gap-1.5 transition-all"
+              >
+                <Layers className="w-3.5 h-3.5" />
+                <span>INSPECT BLOCK #{result.blockchain.block_index}</span>
+              </Link>
+            )}
+          </div>
+
+          {Object.keys(result.extracted_features || {}).length > 0 && (
+            <button
+              onClick={() => setShowFeatures(!showFeatures)}
+              className="px-3 py-1.5 bg-[#facc15] text-black border-2 border-black shadow-[2px_2px_0px_0px_#000] hover:bg-white flex items-center gap-1.5 cursor-pointer transition-all"
+            >
+              <Binary className="w-3.5 h-3.5" />
+              <span>{showFeatures ? 'HIDE 35-D FEATURE VECTOR' : 'VIEW 35-D FEATURE VECTOR'}</span>
+              {showFeatures ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+            </button>
+          )}
+        </div>
       </div>
+
+      {/* 35-Dimensional Extracted Features Drawer */}
+      {showFeatures && Object.keys(result.extracted_features || {}).length > 0 && (
+        <div className="neo-card p-6 bg-white border-[3px] border-white shadow-[6px_6px_0px_0px_#facc15] space-y-4 animate-in slide-in-from-top-4 duration-200">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b-2 border-black gap-2">
+            <div>
+              <h3 className="text-sm font-black font-mono uppercase tracking-wider text-black flex items-center gap-2">
+                <Binary className="w-4 h-4 text-black" />
+                35-DIMENSIONAL LEXICAL &amp; STRUCTURAL FEATURE VECTORS
+              </h3>
+              <p className="text-xs font-mono font-bold text-zinc-600 mt-0.5">
+                Mathematical attributes extracted in real-time without fetching remote web payloads
+              </p>
+            </div>
+
+            <div className="relative w-full sm:w-64">
+              <input
+                type="text"
+                placeholder="FILTER VECTORS..."
+                value={featureSearch}
+                onChange={(e) => setFeatureSearch(e.target.value)}
+                className="w-full bg-[#fdfbf7] border-2 border-black px-3 py-1 text-xs font-mono font-bold text-black focus:outline-none"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 font-mono text-xs max-h-96 overflow-y-auto p-1">
+            {featuresList.map(([key, val]) => (
+              <div
+                key={key}
+                className="p-2.5 bg-[#f6f5f0] border-2 border-black shadow-[2px_2px_0px_0px_#000] flex flex-col justify-between"
+              >
+                <div className="text-[10px] font-black uppercase text-zinc-600 truncate" title={key}>
+                  {key.replace(/_/g, ' ')}
+                </div>
+                <div className="text-sm font-black text-black mt-1 select-all">
+                  {typeof val === 'number' ? Number(val.toFixed(4)) : String(val)}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Main Grid: Risk Meter + Threat Intelligence & SHAP Chart */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -141,14 +245,14 @@ export default function ScanResult({ result }: ScanResultProps) {
           <RiskMeter score={result.risk_score} verdict={result.verdict} />
 
           {/* Threat Intelligence Card */}
-          <div className="neo-card p-5 bg-white">
+          <div className="neo-card p-5 bg-white border-[3px] border-white shadow-[6px_6px_0px_0px_#38bdf8]">
             <div className="flex items-center justify-between pb-3 border-b-2 border-black">
               <h3 className="text-sm font-black font-mono uppercase tracking-wider text-black flex items-center gap-2">
                 <Globe className="w-4 h-4 text-black" />
                 THREAT INTELLIGENCE GRID
               </h3>
               <span className="neo-badge px-2 py-0.5 bg-[#facc15] text-[10px] text-black">
-                {result.threat_intel?.source || 'ALIENVAULT + VYRA'}
+                {result.threat_intel?.source || 'MULTI-FEED REPUTATION'}
               </span>
             </div>
 
@@ -195,22 +299,38 @@ export default function ScanResult({ result }: ScanResultProps) {
                 </span>
               </div>
 
-              {/* Security Engine Flags */}
-              <div className="flex items-center justify-between py-2 border-b border-zinc-200">
-                <span className="text-zinc-600 font-bold flex items-center gap-1.5">
-                  <AlertTriangle className="w-3.5 h-3.5 text-black" />
-                  REPUTATION HITS
-                </span>
-                <span
-                  className={`font-black px-2 py-0.5 border border-black ${
-                    (result.threat_intel?.virustotal_positives || 0) > 0
-                      ? 'bg-[#ff3366] text-white'
-                      : 'bg-[#22c55e] text-black'
-                  }`}
-                >
-                  {result.threat_intel?.virustotal_positives || 0} / 88 ENGINES
-                </span>
-              </div>
+              {/* Multi-Feed Breakdown if available */}
+              {result.threat_intel?.threat_feeds_result && (
+                <div className="pt-2 border-t border-zinc-200 space-y-2">
+                  <span className="text-[10px] font-black uppercase text-zinc-600 block">
+                    INDEPENDENT FEED AUDIT:
+                  </span>
+                  {Object.entries(result.threat_intel.threat_feeds_result).map(([feedKey, feedData]: [string, any]) => (
+                    <div
+                      key={feedKey}
+                      className="p-2 bg-[#fdfbf7] border border-black space-y-1"
+                    >
+                      <div className="flex items-center justify-between text-[11px]">
+                        <span className="font-black uppercase text-black">
+                          {feedKey.replace(/_/g, ' ')}
+                        </span>
+                        <span
+                          className={`px-1.5 py-0.2 border border-black font-black text-[10px] ${
+                            feedData.detected ? 'bg-[#ff3366] text-white' : 'bg-[#22c55e] text-black'
+                          }`}
+                        >
+                          {feedData.detected ? 'FLAGGED' : 'CLEAN'}
+                        </span>
+                      </div>
+                      {feedData.details && (
+                        <p className="text-[10px] text-zinc-600 font-bold truncate" title={feedData.details}>
+                          {feedData.details}
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
 
               {/* Threat Signatures */}
               {result.threat_intel?.threat_types && result.threat_intel.threat_types.length > 0 && (
@@ -240,7 +360,7 @@ export default function ScanResult({ result }: ScanResultProps) {
 
       {/* Blockchain Commitment Card */}
       {result.blockchain && (
-        <div className="neo-card p-6 bg-[#fdfbf7]">
+        <div className="neo-card p-6 bg-white border-[3px] border-white shadow-[6px_6px_0px_0px_#c084fc]">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b-2 border-black gap-3">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-[#c084fc] border-2 border-black flex items-center justify-center shadow-[3px_3px_0px_0px_#000]">
@@ -253,7 +373,7 @@ export default function ScanResult({ result }: ScanResultProps) {
                     NOTARIZED
                   </span>
                 </h3>
-                <p className="text-xs font-mono text-zinc-600">
+                <p className="text-xs font-mono text-zinc-600 font-bold">
                   Cryptographically chained Proof-of-Work block anchored to VYRA ledger
                 </p>
               </div>
@@ -269,15 +389,15 @@ export default function ScanResult({ result }: ScanResultProps) {
 
           <div className="mt-5 grid grid-cols-1 md:grid-cols-2 gap-4 font-mono text-xs">
             {/* Block Hash */}
-            <div className="bg-white p-3.5 border-2 border-black shadow-[3px_3px_0px_0px_#000]">
+            <div className="bg-[#f6f5f0] p-3.5 border-2 border-black shadow-[3px_3px_0px_0px_#000]">
               <div className="flex items-center justify-between text-zinc-500 font-bold mb-1">
                 <span>SHA-256 BLOCK HASH</span>
                 <button
                   onClick={() => copyToClipboard(result.blockchain!.block_hash, 'block_hash')}
-                  className="p-1 bg-black text-white hover:bg-zinc-800 transition-colors"
+                  className="p-1 bg-black text-white hover:bg-zinc-800 transition-colors cursor-pointer"
                   title="Copy Hash"
                 >
-                  {copiedHash === 'block_hash' ? (
+                  {copiedLabel === 'block_hash' ? (
                     <Check className="w-3.5 h-3.5 text-[#22c55e]" />
                   ) : (
                     <Copy className="w-3.5 h-3.5" />
@@ -288,15 +408,15 @@ export default function ScanResult({ result }: ScanResultProps) {
             </div>
 
             {/* Previous Block Hash */}
-            <div className="bg-white p-3.5 border-2 border-black shadow-[3px_3px_0px_0px_#000]">
+            <div className="bg-[#f6f5f0] p-3.5 border-2 border-black shadow-[3px_3px_0px_0px_#000]">
               <div className="flex items-center justify-between text-zinc-500 font-bold mb-1">
                 <span>PREVIOUS LINK HASH</span>
                 <button
                   onClick={() => copyToClipboard(result.blockchain!.prev_hash, 'prev_hash')}
-                  className="p-1 bg-black text-white hover:bg-zinc-800 transition-colors"
+                  className="p-1 bg-black text-white hover:bg-zinc-800 transition-colors cursor-pointer"
                   title="Copy Hash"
                 >
-                  {copiedHash === 'prev_hash' ? (
+                  {copiedLabel === 'prev_hash' ? (
                     <Check className="w-3.5 h-3.5 text-[#22c55e]" />
                   ) : (
                     <Copy className="w-3.5 h-3.5" />
