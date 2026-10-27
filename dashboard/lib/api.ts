@@ -1,6 +1,18 @@
 import { Block, ScanResult, Stats, VerifyResult, ShapFeature, ThreatIntelResult, BlockchainCommitment } from './types';
 
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+/**
+ * Dynamically resolves the API base URL:
+ * - Server-side (SSR / Server Functions): Uses BACKEND_URL injected by Vercel service binding
+ * - Client-side (browser): Uses NEXT_PUBLIC_API_URL or '' (relative path, routed via top-level Vercel rewrite)
+ */
+export function getApiBaseUrl(): string {
+  if (typeof window === 'undefined') {
+    return process.env.BACKEND_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+  }
+  return process.env.NEXT_PUBLIC_API_URL || '';
+}
+
+export const API_BASE_URL = getApiBaseUrl();
 
 // In-memory fallback history for seamless demo when backend is offline
 const fallbackHistory: ScanResult[] = [
@@ -475,7 +487,7 @@ export function mapBackendScanResult(data: any): ScanResult {
 export async function scanUrl(url: string): Promise<ScanResult> {
   const cleanUrl = url.trim();
   try {
-    const res = await fetch(`${API_BASE_URL}/api/scan`, {
+    const res = await fetch(`${getApiBaseUrl()}/api/scan`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ url: cleanUrl }),
@@ -498,7 +510,7 @@ export async function scanUrl(url: string): Promise<ScanResult> {
  */
 export async function getHistory(limit = 10, offset = 0): Promise<ScanResult[]> {
   try {
-    const res = await fetch(`${API_BASE_URL}/api/history?limit=${limit}&offset=${offset}`, {
+    const res = await fetch(`${getApiBaseUrl()}/api/history?limit=${limit}&offset=${offset}`, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
     });
@@ -524,7 +536,7 @@ export async function getHistory(limit = 10, offset = 0): Promise<ScanResult[]> 
  */
 export async function getStats(): Promise<Stats> {
   try {
-    const res = await fetch(`${API_BASE_URL}/api/stats`, {
+    const res = await fetch(`${getApiBaseUrl()}/api/stats`, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
     });
@@ -556,7 +568,7 @@ export async function getStats(): Promise<Stats> {
  */
 export async function getBlockchain(): Promise<Block[]> {
   try {
-    const res = await fetch(`${API_BASE_URL}/api/blockchain`, {
+    const res = await fetch(`${getApiBaseUrl()}/api/blockchain`, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
     });
@@ -581,7 +593,7 @@ export async function getBlockchain(): Promise<Block[]> {
  */
 export async function verifyBlockchain(): Promise<VerifyResult> {
   try {
-    const res = await fetch(`${API_BASE_URL}/api/blockchain/verify`, {
+    const res = await fetch(`${getApiBaseUrl()}/api/blockchain/verify`, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
     });

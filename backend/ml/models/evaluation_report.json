@@ -1,0 +1,174 @@
+{
+  "timestamp": "2026-10-26T19:36:06Z",
+  "dataset_summary": {
+    "total_samples": 111024,
+    "num_features": 35,
+    "train_samples": 88819,
+    "test_samples": 22205,
+    "sources": [
+      "PhishTank (verified active phishing)",
+      "Tranco Top Domains (with realistic paths)"
+    ],
+    "class_distribution": {
+      "legitimate": 55512,
+      "phishing": 55512
+    }
+  },
+  "best_model": {
+    "name": "XGBoost",
+    "test_metrics": {
+      "accuracy": 0.959,
+      "precision": 0.9667,
+      "recall": 0.9507,
+      "f1_score": 0.9586,
+      "roc_auc": 0.9944,
+      "confusion_matrix": {
+        "matrix": [
+          [
+            10739,
+            364
+          ],
+          [
+            547,
+            10555
+          ]
+        ],
+        "tn": 10739,
+        "fp": 364,
+        "fn": 547,
+        "tp": 10555
+      }
+    },
+    "top_features": [
+      {
+        "feature": "digit_ratio",
+        "importance": 0.101934,
+        "rank": 1
+      },
+      {
+        "feature": "domain_length",
+        "importance": 0.09611,
+        "rank": 2
+      },
+      {
+        "feature": "num_digits",
+        "importance": 0.087139,
+        "rank": 3
+      },
+      {
+        "feature": "path_depth",
+        "importance": 0.086729,
+        "rank": 4
+      },
+      {
+        "feature": "query_length",
+        "importance": 0.070948,
+        "rank": 5
+      },
+      {
+        "feature": "query_param_count",
+        "importance": 0.061657,
+        "rank": 6
+      },
+      {
+        "feature": "path_length",
+        "importance": 0.040495,
+        "rank": 7
+      },
+      {
+        "feature": "num_slashes",
+        "importance": 0.036904,
+        "rank": 8
+      },
+      {
+        "feature": "num_equals",
+        "importance": 0.034613,
+        "rank": 9
+      },
+      {
+        "feature": "num_question_marks",
+        "importance": 0.033186,
+        "rank": 10
+      },
+      {
+        "feature": "domain_hyphen_count",
+        "importance": 0.033007,
+        "rank": 11
+      },
+      {
+        "feature": "num_underscores",
+        "importance": 0.027269,
+        "rank": 12
+      },
+      {
+        "feature": "has_at_symbol",
+        "importance": 0.026397,
+        "rank": 13
+      },
+      {
+        "feature": "is_shortened_url",
+        "importance": 0.025917,
+        "rank": 14
+      },
+      {
+        "feature": "digit_count_in_domain",
+        "importance": 0.024564,
+        "rank": 15
+      }
+    ]
+  },
+  "all_models_comparison": {
+    "XGBoost": {
+      "metrics": {
+        "accuracy": 0.959,
+        "precision": 0.9667,
+        "recall": 0.9507,
+        "f1_score": 0.9586,
+        "roc_auc": 0.9944,
+        "confusion_matrix": {
+          "matrix": [
+            [
+              10739,
+              364
+            ],
+            [
+              547,
+              10555
+            ]
+          ],
+          "tn": 10739,
+          "fp": 364,
+          "fn": 547,
+          "tp": 10555
+        }
+      },
+      "train_time_sec": 1.34
+    },
+    "RandomForest": {
+      "metrics": {
+        "accuracy": 0.9556,
+        "precision": 0.9634,
+        "recall": 0.9471,
+        "f1_score": 0.9552,
+        "roc_auc": 0.9923,
+        "confusion_matrix": {
+          "matrix": [
+            [
+              10704,
+              399
+            ],
+            [
+              587,
+              10515
+            ]
+          ],
+          "tn": 10704,
+          "fp": 399,
+          "fn": 587,
+          "tp": 10515
+        }
+      },
+      "train_time_sec": 6.9
+    }
+  }
+}

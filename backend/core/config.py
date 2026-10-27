@@ -16,7 +16,11 @@ class Settings(BaseSettings):
     APP_NAME: str = "VYRA"
     VERSION: str = "1.0.0"
     DB_URL: str = "sqlite+aiosqlite:///./vyra.db"
-    ML_MODEL_PATH: str = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "ml", "models", "vyra_model.joblib")
+    ML_MODEL_PATH: str = (
+        os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "ml", "models", "vyra_model.joblib")
+        if os.path.isfile(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "ml", "models", "vyra_model.joblib"))
+        else os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "ml", "models", "vyra_model.joblib")
+    )
     SECRET_KEY: str = "vyra-production-secret-key-32-char-minimum-token-protection"
     CORS_ORIGINS: List[str] = ["*"]
     BLOCKCHAIN_FILE_PATH: str = "./blockchain_data.json"
