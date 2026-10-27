@@ -18,6 +18,8 @@ import {
   Clock,
   Cpu,
   AlertTriangle,
+  Terminal,
+  FileCheck2,
 } from 'lucide-react';
 
 interface ScanResultProps {
@@ -44,48 +46,38 @@ export default function ScanResult({ result }: ScanResultProps) {
   };
 
   return (
-    <div className="w-full space-y-6 animate-in fade-in duration-500">
-      {/* Top Verdict Banner */}
+    <div className="w-full space-y-8 animate-in fade-in duration-300">
+      {/* Top Verdict Banner (Neo-Brutalist High Impact Card) */}
       <div
-        className={`relative overflow-hidden rounded-2xl border p-6 backdrop-blur-md ${
-          isPhishing
-            ? 'bg-gradient-to-r from-red-950/80 via-gray-900 to-red-950/40 border-red-500/40 shadow-xl shadow-red-950/30'
-            : 'bg-gradient-to-r from-emerald-950/80 via-gray-900 to-emerald-950/40 border-emerald-500/40 shadow-xl shadow-emerald-950/30'
+        className={`neo-card relative overflow-hidden p-6 sm:p-8 ${
+          isPhishing ? 'bg-[#ff3366] text-white' : 'bg-[#22c55e] text-black'
         }`}
       >
-        {/* Subtle background glow */}
+        {/* Top Hazard Accent Bar */}
         <div
-          className={`absolute -top-12 -right-12 w-48 h-48 rounded-full blur-3xl opacity-20 pointer-events-none ${
-            isPhishing ? 'bg-red-500' : 'bg-emerald-500'
+          className={`absolute top-0 left-0 right-0 h-3 border-b-2 border-black ${
+            isPhishing ? 'neo-hazard-red' : 'neo-hazard-green'
           }`}
         />
 
-        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 pt-2">
           {/* Verdict Info */}
           <div className="flex items-start gap-4">
-            <div
-              className={`p-3.5 rounded-2xl border ${
-                isPhishing
-                  ? 'bg-red-500/10 border-red-500/30 text-red-400'
-                  : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-              }`}
-            >
-              {isPhishing ? <ShieldAlert className="w-10 h-10" /> : <ShieldCheck className="w-10 h-10" />}
+            <div className="w-16 h-16 bg-black border-2 border-black flex items-center justify-center shrink-0 shadow-[4px_4px_0px_0px_#ffffff]">
+              {isPhishing ? (
+                <ShieldAlert className="w-10 h-10 text-[#ff3366]" />
+              ) : (
+                <ShieldCheck className="w-10 h-10 text-[#22c55e]" />
+              )}
             </div>
 
-            <div>
-              <div className="flex items-center gap-3 flex-wrap">
-                <span
-                  className={`px-3 py-1 text-xs font-bold uppercase tracking-widest rounded-full border ${
-                    isPhishing
-                      ? 'bg-red-500/20 text-red-400 border-red-500/40'
-                      : 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40'
-                  }`}
-                >
-                  {isPhishing ? 'PHISHING' : 'LEGITIMATE'}
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="px-3 py-1 bg-black text-white text-xs font-mono font-black uppercase tracking-wider border-2 border-black shadow-[2px_2px_0px_0px_rgba(255,255,255,0.8)]">
+                  {isPhishing ? '⚠️ MALICIOUS THREAT DETECTED' : '🛡️ VERIFIED LEGITIMATE'}
                 </span>
 
-                <span className="text-xs font-mono text-gray-400 flex items-center gap-1">
+                <span className="px-2.5 py-1 bg-white text-black text-xs font-mono font-bold border-2 border-black shadow-[2px_2px_0px_0px_#000] flex items-center gap-1">
                   <Clock className="w-3.5 h-3.5" />
                   {new Date(result.timestamp).toLocaleTimeString([], {
                     hour: '2-digit',
@@ -95,141 +87,140 @@ export default function ScanResult({ result }: ScanResultProps) {
                 </span>
 
                 {result.processing_time_ms && (
-                  <span className="text-xs font-mono text-cyan-400 bg-cyan-950/50 px-2 py-0.5 rounded border border-cyan-800/40">
-                    {result.processing_time_ms} ms latency
+                  <span className="px-2.5 py-1 bg-[#facc15] text-black text-xs font-mono font-bold border-2 border-black shadow-[2px_2px_0px_0px_#000]">
+                    {result.processing_time_ms} MS INFERENCE
                   </span>
                 )}
               </div>
 
-              <h2 className="text-2xl font-bold text-gray-100 mt-2 flex items-center gap-2">
-                {isPhishing ? 'Deceptive Phishing Destination' : 'Legitimate Verified Destination'}
-                <span className="text-sm font-semibold text-gray-400 font-mono">
-                  ({displayConfidence}% confidence)
-                </span>
+              <h2 className="text-3xl sm:text-4xl font-black font-mono tracking-tight leading-none uppercase">
+                {isPhishing
+                  ? 'Deceptive Phishing Destination'
+                  : 'Legitimate Verified Destination'}
               </h2>
 
-              {/* Scanned URL display */}
-              <div className="mt-2.5 flex items-center gap-2 max-w-2xl bg-gray-950/70 px-3 py-1.5 rounded-lg border border-gray-800 text-xs font-mono">
-                <span className="text-gray-400 shrink-0">TARGET:</span>
-                <span className="text-gray-200 truncate select-all">{result.url}</span>
+              {/* Scanned URL display box */}
+              <div className="mt-3 flex items-center gap-2 max-w-2xl bg-white text-black px-3 py-2 border-2 border-black text-xs font-mono font-bold shadow-[3px_3px_0px_0px_#000]">
+                <span className="text-zinc-500 shrink-0 select-none">TARGET:</span>
+                <span className="truncate select-all">{result.url}</span>
                 <button
                   onClick={() => copyToClipboard(result.url, 'url')}
-                  className="p-1 hover:text-cyan-400 text-gray-400 transition-colors ml-auto"
+                  className="p-1 bg-black text-white hover:bg-zinc-800 transition-colors ml-auto shrink-0"
                   title="Copy URL"
                 >
-                  {copiedHash === 'url' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                  {copiedHash === 'url' ? <Check className="w-3.5 h-3.5 text-[#22c55e]" /> : <Copy className="w-3.5 h-3.5" />}
                 </button>
               </div>
             </div>
           </div>
 
-          {/* Quick Metrics */}
+          {/* Quick Metrics Badges */}
           <div className="flex items-center gap-3 shrink-0">
-            <div className="bg-gray-950/80 p-3 rounded-xl border border-gray-800 text-center min-w-[100px]">
-              <div className="text-[10px] uppercase tracking-wider text-gray-400 font-medium">Confidence</div>
-              <div className="text-xl font-bold font-mono text-gray-100">{displayConfidence}%</div>
+            <div className="bg-white text-black p-3.5 border-2 border-black shadow-[4px_4px_0px_0px_#000] text-center min-w-[110px]">
+              <div className="text-[10px] uppercase font-mono font-black text-zinc-500">CONFIDENCE</div>
+              <div className="text-2xl font-black font-mono">{displayConfidence}%</div>
             </div>
-            <div className="bg-gray-950/80 p-3 rounded-xl border border-gray-800 text-center min-w-[100px]">
-              <div className="text-[10px] uppercase tracking-wider text-gray-400 font-medium">Risk Score</div>
-              <div
-                className={`text-xl font-bold font-mono ${
-                  result.risk_score >= 70
-                    ? 'text-red-400'
-                    : result.risk_score >= 35
-                    ? 'text-amber-400'
-                    : 'text-emerald-400'
-                }`}
-              >
-                {result.risk_score}/100
-              </div>
+
+            <div
+              className={`p-3.5 border-2 border-black shadow-[4px_4px_0px_0px_#000] text-center min-w-[110px] ${
+                isPhishing ? 'bg-black text-[#ff3366]' : 'bg-[#facc15] text-black'
+              }`}
+            >
+              <div className="text-[10px] uppercase font-mono font-black opacity-80">THREAT SCORE</div>
+              <div className="text-2xl font-black font-mono">{result.risk_score}/100</div>
             </div>
           </div>
         </div>
       </div>
 
       {/* Main Grid: Risk Meter + Threat Intelligence & SHAP Chart */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Left Column: Risk Meter and Threat Intelligence Card */}
-        <div className="lg:col-span-5 space-y-6">
+        <div className="lg:col-span-5 space-y-8">
           {/* Visual Risk Meter */}
           <RiskMeter score={result.risk_score} verdict={result.verdict} />
 
           {/* Threat Intelligence Card */}
-          <div className="bg-gray-900/80 rounded-xl border border-gray-800 p-5 shadow-lg backdrop-blur-sm">
-            <div className="flex items-center justify-between pb-3 border-b border-gray-800">
-              <h3 className="text-sm font-semibold text-gray-200 uppercase tracking-wider flex items-center gap-2">
-                <Globe className="w-4 h-4 text-cyan-400" />
-                Threat Intelligence Grid
+          <div className="neo-card p-5 bg-white">
+            <div className="flex items-center justify-between pb-3 border-b-2 border-black">
+              <h3 className="text-sm font-black font-mono uppercase tracking-wider text-black flex items-center gap-2">
+                <Globe className="w-4 h-4 text-black" />
+                THREAT INTELLIGENCE GRID
               </h3>
-              <span className="text-[11px] font-mono text-cyan-400 bg-cyan-950/60 px-2 py-0.5 rounded border border-cyan-800/40">
-                {result.threat_intel?.source || 'AlienVault + VYRA'}
+              <span className="neo-badge px-2 py-0.5 bg-[#facc15] text-[10px] text-black">
+                {result.threat_intel?.source || 'ALIENVAULT + VYRA'}
               </span>
             </div>
 
-            <div className="mt-4 space-y-3 text-xs">
+            <div className="mt-4 space-y-3 font-mono text-xs">
               {/* Host & IP */}
-              <div className="flex items-center justify-between py-1.5 border-b border-gray-800/60">
-                <span className="text-gray-400 flex items-center gap-1.5">
-                  <Server className="w-3.5 h-3.5 text-gray-400" />
-                  Resolved IP Address
+              <div className="flex items-center justify-between py-2 border-b border-zinc-200">
+                <span className="text-zinc-600 font-bold flex items-center gap-1.5">
+                  <Server className="w-3.5 h-3.5 text-black" />
+                  RESOLVED IP
                 </span>
-                <span className="font-mono text-gray-200">
-                  {result.threat_intel?.ip_address || 'Unresolved'} {result.threat_intel?.country ? `(${result.threat_intel.country})` : ''}
+                <span className="font-black text-black">
+                  {result.threat_intel?.ip_address || '127.0.0.1'}{' '}
+                  {result.threat_intel?.country ? `[${result.threat_intel.country}]` : ''}
                 </span>
               </div>
 
               {/* Domain Age */}
-              <div className="flex items-center justify-between py-1.5 border-b border-gray-800/60">
-                <span className="text-gray-400 flex items-center gap-1.5">
-                  <Calendar className="w-3.5 h-3.5 text-gray-400" />
-                  Domain Age
+              <div className="flex items-center justify-between py-2 border-b border-zinc-200">
+                <span className="text-zinc-600 font-bold flex items-center gap-1.5">
+                  <Calendar className="w-3.5 h-3.5 text-black" />
+                  DOMAIN REGISTRATION
                 </span>
-                <span className="font-mono text-gray-200">
+                <span className="font-black text-black">
                   {result.threat_intel?.domain_age_days !== undefined && result.threat_intel?.domain_age_days !== null
-                    ? `${result.threat_intel.domain_age_days} days`
-                    : 'Unknown'}
+                    ? `${result.threat_intel.domain_age_days} DAYS`
+                    : 'NEW / UNKNOWN'}
                 </span>
               </div>
 
               {/* SSL Certificate */}
-              <div className="flex items-center justify-between py-1.5 border-b border-gray-800/60">
-                <span className="text-gray-400 flex items-center gap-1.5">
-                  <Lock className="w-3.5 h-3.5 text-gray-400" />
-                  SSL Certificate
+              <div className="flex items-center justify-between py-2 border-b border-zinc-200">
+                <span className="text-zinc-600 font-bold flex items-center gap-1.5">
+                  <Lock className="w-3.5 h-3.5 text-black" />
+                  CRYPTOGRAPHIC TLS
                 </span>
                 <span
-                  className={`font-semibold flex items-center gap-1 ${
-                    result.threat_intel?.ssl_valid ? 'text-emerald-400' : 'text-red-400'
+                  className={`font-black px-2 py-0.5 border border-black ${
+                    result.threat_intel?.ssl_valid
+                      ? 'bg-[#22c55e] text-black'
+                      : 'bg-[#ff3366] text-white'
                   }`}
                 >
-                  {result.threat_intel?.ssl_valid ? 'Valid TLS / SSL' : 'Invalid / Insecure'}
+                  {result.threat_intel?.ssl_valid ? 'VALID TLS // SSL' : 'INSECURE / RAW HTTP'}
                 </span>
               </div>
 
-              {/* VirusTotal / Blacklist Positives */}
-              <div className="flex items-center justify-between py-1.5 border-b border-gray-800/60">
-                <span className="text-gray-400 flex items-center gap-1.5">
-                  <AlertTriangle className="w-3.5 h-3.5 text-gray-400" />
-                  Security Engine Flags
+              {/* Security Engine Flags */}
+              <div className="flex items-center justify-between py-2 border-b border-zinc-200">
+                <span className="text-zinc-600 font-bold flex items-center gap-1.5">
+                  <AlertTriangle className="w-3.5 h-3.5 text-black" />
+                  REPUTATION HITS
                 </span>
                 <span
-                  className={`font-mono font-bold ${
-                    (result.threat_intel?.virustotal_positives || 0) > 0 ? 'text-red-400' : 'text-emerald-400'
+                  className={`font-black px-2 py-0.5 border border-black ${
+                    (result.threat_intel?.virustotal_positives || 0) > 0
+                      ? 'bg-[#ff3366] text-white'
+                      : 'bg-[#22c55e] text-black'
                   }`}
                 >
-                  {result.threat_intel?.virustotal_positives || 0} / {result.threat_intel?.virustotal_total || 88} engines
+                  {result.threat_intel?.virustotal_positives || 0} / 88 ENGINES
                 </span>
               </div>
 
-              {/* Threat Classification Tags */}
+              {/* Threat Signatures */}
               {result.threat_intel?.threat_types && result.threat_intel.threat_types.length > 0 && (
                 <div className="pt-2">
-                  <span className="text-gray-400 block mb-2 font-medium">Identified Threat Signatures:</span>
-                  <div className="flex flex-wrap gap-1.5">
+                  <span className="text-zinc-600 block mb-2 font-bold">MATCHED ADVERSARIAL PATTERNS:</span>
+                  <div className="flex flex-wrap gap-2">
                     {result.threat_intel.threat_types.map((type, i) => (
                       <span
                         key={i}
-                        className="px-2 py-0.5 bg-red-950/60 border border-red-800/50 text-red-400 rounded text-[11px] font-mono"
+                        className="neo-badge px-2 py-1 bg-[#ff4365] text-white text-[11px]"
                       >
                         {type}
                       </span>
@@ -249,90 +240,72 @@ export default function ScanResult({ result }: ScanResultProps) {
 
       {/* Blockchain Commitment Card */}
       {result.blockchain && (
-        <div className="bg-gray-900/80 rounded-xl border border-gray-800 p-5 shadow-lg backdrop-blur-sm">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-gray-800 gap-2">
-            <div className="flex items-center gap-2">
-              <Layers className="w-5 h-5 text-cyan-400" />
+        <div className="neo-card p-6 bg-[#fdfbf7]">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b-2 border-black gap-3">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-[#c084fc] border-2 border-black flex items-center justify-center shadow-[3px_3px_0px_0px_#000]">
+                <Layers className="w-5 h-5 text-black" />
+              </div>
               <div>
-                <h3 className="text-sm font-semibold text-gray-200 uppercase tracking-wider flex items-center gap-2">
-                  Blockchain Immutability Proof
-                  <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] font-mono">
-                    COMMITTED
+                <h3 className="text-base font-black font-mono uppercase tracking-wider text-black flex items-center gap-2">
+                  IMMUTABLE BLOCKCHAIN AUDIT RECEIPT
+                  <span className="neo-badge px-2 py-0.5 bg-[#22c55e] text-black text-[10px]">
+                    NOTARIZED
                   </span>
                 </h3>
-                <p className="text-xs text-gray-400">
-                  Tamper-proof cryptographic record permanently anchored on VYRA ledger
+                <p className="text-xs font-mono text-zinc-600">
+                  Cryptographically chained Proof-of-Work block anchored to VYRA ledger
                 </p>
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
-              <span className="text-xs text-gray-400 font-mono">Block Index:</span>
-              <span className="px-2.5 py-1 bg-cyan-950/80 text-cyan-300 font-mono text-xs font-bold rounded border border-cyan-800/50">
+            <div className="flex items-center gap-2 font-mono">
+              <span className="text-xs font-bold text-black uppercase">BLOCK INDEX:</span>
+              <span className="px-3 py-1 bg-black text-[#facc15] font-black text-sm border-2 border-black shadow-[2px_2px_0px_0px_#000]">
                 #{result.blockchain.block_index}
               </span>
             </div>
           </div>
 
-          <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
+          <div className="mt-5 grid grid-cols-1 md:grid-cols-2 gap-4 font-mono text-xs">
             {/* Block Hash */}
-            <div className="bg-gray-950/80 p-3 rounded-lg border border-gray-800/80">
-              <div className="flex items-center justify-between text-gray-400 mb-1">
-                <span>BLOCK HASH (SHA-256)</span>
+            <div className="bg-white p-3.5 border-2 border-black shadow-[3px_3px_0px_0px_#000]">
+              <div className="flex items-center justify-between text-zinc-500 font-bold mb-1">
+                <span>SHA-256 BLOCK HASH</span>
                 <button
                   onClick={() => copyToClipboard(result.blockchain!.block_hash, 'block_hash')}
-                  className="hover:text-cyan-400 transition-colors"
+                  className="p-1 bg-black text-white hover:bg-zinc-800 transition-colors"
                   title="Copy Hash"
                 >
                   {copiedHash === 'block_hash' ? (
-                    <Check className="w-3.5 h-3.5 text-emerald-400" />
+                    <Check className="w-3.5 h-3.5 text-[#22c55e]" />
                   ) : (
                     <Copy className="w-3.5 h-3.5" />
                   )}
                 </button>
               </div>
-              <div className="text-cyan-400 break-all select-all">{result.blockchain.block_hash}</div>
+              <div className="font-black text-black break-all select-all">{result.blockchain.block_hash}</div>
             </div>
 
             {/* Previous Block Hash */}
-            <div className="bg-gray-950/80 p-3 rounded-lg border border-gray-800/80">
-              <div className="flex items-center justify-between text-gray-400 mb-1">
-                <span>PREVIOUS BLOCK LINK</span>
+            <div className="bg-white p-3.5 border-2 border-black shadow-[3px_3px_0px_0px_#000]">
+              <div className="flex items-center justify-between text-zinc-500 font-bold mb-1">
+                <span>PREVIOUS LINK HASH</span>
                 <button
                   onClick={() => copyToClipboard(result.blockchain!.prev_hash, 'prev_hash')}
-                  className="hover:text-cyan-400 transition-colors"
+                  className="p-1 bg-black text-white hover:bg-zinc-800 transition-colors"
                   title="Copy Hash"
                 >
                   {copiedHash === 'prev_hash' ? (
-                    <Check className="w-3.5 h-3.5 text-emerald-400" />
+                    <Check className="w-3.5 h-3.5 text-[#22c55e]" />
                   ) : (
                     <Copy className="w-3.5 h-3.5" />
                   )}
                 </button>
               </div>
-              <div className="text-gray-400 break-all select-all">{result.blockchain.prev_hash}</div>
+              <div className="font-black text-zinc-600 break-all select-all">{result.blockchain.prev_hash}</div>
             </div>
           </div>
-
-          {result.blockchain.tx_hash && (
-            <div className="mt-3 bg-gray-950/80 p-3 rounded-lg border border-gray-800/80 text-xs font-mono">
-              <div className="flex items-center justify-between text-gray-400 mb-1">
-                <span>TRANSACTION RECEIPT (TX HASH)</span>
-                <button
-                  onClick={() => copyToClipboard(result.blockchain!.tx_hash!, 'tx_hash')}
-                  className="hover:text-cyan-400 transition-colors"
-                  title="Copy Tx Hash"
-                >
-                  {copiedHash === 'tx_hash' ? (
-                    <Check className="w-3.5 h-3.5 text-emerald-400" />
-                  ) : (
-                    <Copy className="w-3.5 h-3.5" />
-                  )}
-                </button>
-              </div>
-              <div className="text-emerald-400/90 break-all select-all">{result.blockchain.tx_hash}</div>
-            </div>
-          )}
         </div>
       )}
     </div>

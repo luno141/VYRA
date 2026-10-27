@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { AlertOctagon, ShieldCheck, AlertTriangle } from 'lucide-react';
 
 interface RiskMeterProps {
   score: number; // 0 to 100
@@ -8,140 +9,109 @@ interface RiskMeterProps {
   size?: 'sm' | 'md' | 'lg';
 }
 
-export default function RiskMeter({ score, verdict, size = 'md' }: RiskMeterProps) {
-  // Normalize score between 0 and 100
+export default function RiskMeter({ score, verdict }: RiskMeterProps) {
   const normalizedScore = Math.max(0, Math.min(100, Math.round(score)));
 
-  // Color selection based on score
-  const getColor = (val: number) => {
+  const getRiskDetails = (val: number) => {
     if (val >= 70) {
       return {
-        text: 'text-red-400',
-        bg: 'bg-red-500',
-        border: 'border-red-500/30',
-        stroke: '#ef4444',
-        glow: 'rgba(239, 68, 68, 0.4)',
-        label: 'CRITICAL RISK',
-        sublabel: 'Phishing Pattern Confirmed',
+        badgeBg: 'bg-[#ff3366] text-white',
+        border: 'border-black',
+        label: 'CRITICAL THREAT LEVEL',
+        sublabel: 'Zero-Day Phishing Architecture Confirmed',
+        icon: AlertOctagon,
+        segmentActive: 'bg-[#ff3366]',
       };
     }
     if (val >= 35) {
       return {
-        text: 'text-amber-400',
-        bg: 'bg-amber-500',
-        border: 'border-amber-500/30',
-        stroke: '#f59e0b',
-        glow: 'rgba(245, 158, 11, 0.4)',
-        label: 'MODERATE RISK',
-        sublabel: 'Suspicious Indicators Found',
+        badgeBg: 'bg-[#facc15] text-black',
+        border: 'border-black',
+        label: 'SUSPICIOUS / ELEVATED RISK',
+        sublabel: 'Structural Anomalies Detected in URL',
+        icon: AlertTriangle,
+        segmentActive: 'bg-[#facc15]',
       };
     }
     return {
-      text: 'text-emerald-400',
-      bg: 'bg-emerald-500',
-      border: 'border-emerald-500/30',
-      stroke: '#22c55e',
-      glow: 'rgba(34, 197, 94, 0.4)',
-      label: 'SAFE / VERIFIED',
-      sublabel: 'Legitimate Domain Signals',
+      badgeBg: 'bg-[#22c55e] text-black',
+      border: 'border-black',
+      label: 'BENIGN / VERIFIED SAFE',
+      sublabel: 'Authentic Domain & Topology Confirmed',
+      icon: ShieldCheck,
+      segmentActive: 'bg-[#22c55e]',
     };
   };
 
-  const colorInfo = getColor(normalizedScore);
+  const risk = getRiskDetails(normalizedScore);
+  const Icon = risk.icon;
 
-  // Semicircle gauge parameters
-  // Radius = 80, Center = (100, 95)
-  // Arc goes from 180 deg to 360 deg (half circle)
-  // Arc length = PI * 80 ≈ 251.327
-  const radius = 70;
-  const circumference = Math.PI * radius; // ~219.9
-  const strokeDashoffset = circumference - (normalizedScore / 100) * circumference;
+  // 10 brutalist segments
+  const totalSegments = 10;
+  const activeSegments = Math.round((normalizedScore / 100) * totalSegments);
 
   return (
-    <div className="flex flex-col items-center justify-center p-4 bg-gray-900/60 rounded-xl border border-gray-800">
-      <div className="text-xs uppercase font-semibold tracking-wider text-gray-400 mb-2 flex items-center gap-1.5">
-        <span className={`inline-block w-2 h-2 rounded-full ${colorInfo.bg} animate-pulse`} />
-        Threat Risk Assessment
+    <div className="neo-card p-6 bg-white space-y-5">
+      {/* Header */}
+      <div className="flex items-center justify-between pb-3 border-b-2 border-black">
+        <div className="flex items-center gap-2">
+          <Icon className="w-5 h-5 text-black" />
+          <span className="font-mono font-black text-xs uppercase tracking-wider text-black">
+            THREAT RISK ASSESSMENT
+          </span>
+        </div>
+        <span className="px-2 py-0.5 bg-black text-white font-mono text-[10px] font-black uppercase">
+          SCORE ENGINE
+        </span>
       </div>
 
-      {/* Semicircle SVG Gauge */}
-      <div className="relative w-48 h-28 flex items-end justify-center overflow-hidden">
-        <svg
-          viewBox="0 0 160 90"
-          className="w-full h-full transform transition-all duration-700 ease-out"
-        >
-          <defs>
-            <linearGradient id="meterGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#22c55e" />
-              <stop offset="50%" stopColor="#f59e0b" />
-              <stop offset="100%" stopColor="#ef4444" />
-            </linearGradient>
-            <filter id="gaugeGlow" x="-20%" y="-20%" width="140%" height="140%">
-              <feGaussianBlur stdDeviation="3" result="blur" />
-              <feComposite in="SourceGraphic" in2="blur" operator="over" />
-            </filter>
-          </defs>
-
-          {/* Background Track */}
-          <path
-            d="M 15 80 A 65 65 0 0 1 145 80"
-            fill="none"
-            stroke="#1f2937"
-            strokeWidth="12"
-            strokeLinecap="round"
-          />
-
-          {/* Active Progress Arc */}
-          <path
-            d="M 15 80 A 65 65 0 0 1 145 80"
-            fill="none"
-            stroke={colorInfo.stroke}
-            strokeWidth="12"
-            strokeLinecap="round"
-            strokeDasharray={Math.PI * 65}
-            strokeDashoffset={Math.PI * 65 * (1 - normalizedScore / 100)}
-            filter="url(#gaugeGlow)"
-            className="transition-all duration-1000 ease-out"
-          />
-        </svg>
-
-        {/* Center Readout */}
-        <div className="absolute bottom-1 flex flex-col items-center">
-          <span className={`text-4xl font-extrabold tracking-tight font-mono ${colorInfo.text}`}>
+      {/* Chunky Score Readout */}
+      <div className="flex items-center justify-between gap-4 p-4 bg-[#fdfbf7] border-2 border-black shadow-[3px_3px_0px_0px_#000]">
+        <div>
+          <div className="text-[10px] font-mono font-black uppercase text-zinc-500">CALCULATED RISK</div>
+          <div className="text-4xl sm:text-5xl font-mono font-black text-black leading-none mt-1">
             {normalizedScore}
-          </span>
-          <span className="text-[10px] text-gray-400 uppercase tracking-widest -mt-0.5">
-            / 100 Score
-          </span>
+            <span className="text-sm font-normal text-zinc-500 ml-1">/100</span>
+          </div>
+        </div>
+
+        <div className="text-right">
+          <div className={`neo-badge px-3 py-1.5 text-xs font-black uppercase inline-block ${risk.badgeBg}`}>
+            {risk.label}
+          </div>
+          <p className="text-[11px] font-mono font-bold text-zinc-600 mt-1 max-w-[200px]">
+            {risk.sublabel}
+          </p>
         </div>
       </div>
 
-      {/* Rating badge & status */}
-      <div className="mt-3 text-center">
-        <div
-          className={`inline-block px-3 py-1 rounded-full text-xs font-bold tracking-wide border ${colorInfo.border} ${colorInfo.text} bg-gray-950/80`}
-        >
-          {colorInfo.label}
+      {/* 10-Segment Brutalist Meter */}
+      <div className="space-y-2">
+        <div className="flex items-center justify-between font-mono text-[10px] font-black text-black">
+          <span>0 (BENIGN)</span>
+          <span>50 (ELEVATED)</span>
+          <span>100 (CRITICAL)</span>
         </div>
-        <p className="text-xs text-gray-400 mt-1">{colorInfo.sublabel}</p>
-      </div>
 
-      {/* Horizontal Bar Breakdown */}
-      <div className="w-full mt-4 pt-3 border-t border-gray-800/80">
-        <div className="flex justify-between text-[11px] text-gray-400 mb-1.5 font-mono">
-          <span>0 (Safe)</span>
-          <span>50 (Suspicious)</span>
-          <span>100 (Phishing)</span>
-        </div>
-        <div className="h-2 w-full bg-gray-800 rounded-full overflow-hidden p-0.5">
-          <div
-            className="h-full rounded-full transition-all duration-1000 ease-out"
-            style={{
-              width: `${normalizedScore}%`,
-              backgroundColor: colorInfo.stroke,
-              boxShadow: `0 0 8px ${colorInfo.stroke}`,
-            }}
-          />
+        <div className="grid grid-cols-10 gap-1.5 p-1.5 bg-black border-2 border-black shadow-[2px_2px_0px_0px_#000]">
+          {Array.from({ length: totalSegments }).map((_, i) => {
+            const isActive = i < activeSegments;
+            let colorClass = 'bg-zinc-800';
+
+            if (isActive) {
+              if (i < 4) colorClass = 'bg-[#22c55e]';
+              else if (i < 7) colorClass = 'bg-[#facc15]';
+              else colorClass = 'bg-[#ff3366]';
+            }
+
+            return (
+              <div
+                key={i}
+                className={`h-6 border border-black transition-all ${colorClass}`}
+                title={`Level ${i + 1}`}
+              />
+            );
+          })}
         </div>
       </div>
     </div>

@@ -12,11 +12,12 @@ import {
   RefreshCw,
   Copy,
   Check,
-  ArrowRight,
+  ArrowDown,
   Lock,
   Layers,
   Cpu,
   Hash,
+  Terminal,
 } from 'lucide-react';
 
 export default function BlockchainPage() {
@@ -40,7 +41,6 @@ export default function BlockchainPage() {
 
   useEffect(() => {
     fetchBlocks();
-    // Default initial verification
     handleVerify();
   }, []);
 
@@ -67,16 +67,15 @@ export default function BlockchainPage() {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/60 border border-cyan-800/40 text-cyan-400 text-xs font-mono mb-2">
-            <Lock className="w-3.5 h-3.5" />
-            <span>SHA-256 Merkle Ledger</span>
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 bg-[#c084fc] border-2 border-black font-mono text-[11px] font-black uppercase shadow-[2px_2px_0px_0px_#000] mb-2">
+            <Lock className="w-3 h-3 text-black" />
+            <span>PROOF-OF-WORK // SHA-256 AUDIT TRAIL</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold font-mono text-gray-100 flex items-center gap-3">
-            <ChainIcon className="w-7 h-7 text-cyan-400" />
+          <h1 className="text-3xl sm:text-4xl font-black font-mono text-black uppercase tracking-tight">
             Blockchain Audit Ledger
           </h1>
-          <p className="text-sm text-gray-400 mt-1">
-            Tamper-evident, cryptographically chained records of all detection outcomes and ML inferences
+          <p className="text-xs font-mono font-bold text-zinc-600 mt-1">
+            Tamper-evident, cryptographically linked notarization blocks securing every prediction
           </p>
         </div>
 
@@ -84,287 +83,185 @@ export default function BlockchainPage() {
           <button
             onClick={fetchBlocks}
             disabled={loading}
-            className="flex items-center gap-2 px-3 py-2 bg-gray-900 hover:bg-gray-800 text-gray-300 border border-gray-700 rounded-lg text-xs font-mono transition-colors"
+            className="neo-btn flex items-center gap-2 px-3 py-2 bg-white text-black font-mono text-xs font-black uppercase cursor-pointer"
           >
-            <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin text-cyan-400' : ''}`} />
-            <span>Sync</span>
+            <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin text-black' : ''}`} />
+            <span>SYNC NODE</span>
           </button>
 
           <button
             onClick={handleVerify}
             disabled={verifying}
-            className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-gray-950 font-bold font-mono rounded-lg text-xs shadow-lg shadow-cyan-500/20 transition-all cursor-pointer disabled:opacity-60"
+            className="neo-btn flex items-center gap-2 px-4 py-2 bg-[#ccff00] text-black font-mono text-xs font-black uppercase cursor-pointer disabled:opacity-60"
           >
             {verifying ? (
               <>
                 <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                <span>VERIFYING CHAIN...</span>
+                <span>VERIFYING HASHES...</span>
               </>
             ) : (
               <>
-                <ShieldCheck className="w-4 h-4" />
-                <span>VERIFY CHAIN INTEGRITY</span>
+                <CheckCircle2 className="w-3.5 h-3.5" />
+                <span>VERIFY CHAIN</span>
               </>
             )}
           </button>
         </div>
       </div>
 
-      {/* Verification Status Card */}
+      {/* Chain Verification Status Card */}
       {verifyResult && (
         <div
-          className={`p-5 rounded-xl border backdrop-blur-md transition-all ${
+          className={`neo-card p-6 border-[3px] border-black ${
             verifyResult.is_valid
-              ? 'bg-emerald-950/40 border-emerald-500/40 shadow-lg shadow-emerald-950/20'
-              : 'bg-red-950/40 border-red-500/40 shadow-lg shadow-red-950/20'
+              ? 'bg-[#22c55e] text-black'
+              : 'bg-[#ff3366] text-white'
           }`}
         >
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div className="flex items-start gap-3.5">
-              <div
-                className={`p-2.5 rounded-xl border ${
-                  verifyResult.is_valid
-                    ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-400'
-                    : 'bg-red-500/20 border-red-500/40 text-red-400'
-                }`}
-              >
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 bg-black border-2 border-black flex items-center justify-center shrink-0 shadow-[3px_3px_0px_0px_#ffffff]">
                 {verifyResult.is_valid ? (
-                  <CheckCircle2 className="w-6 h-6" />
+                  <ShieldCheck className="w-8 h-8 text-[#22c55e]" />
                 ) : (
-                  <AlertTriangle className="w-6 h-6" />
+                  <AlertTriangle className="w-8 h-8 text-[#ff3366]" />
                 )}
               </div>
 
               <div>
-                <div className="flex items-center gap-2">
-                  <span
-                    className={`font-mono font-bold text-xs uppercase px-2.5 py-0.5 rounded-full border ${
-                      verifyResult.is_valid
-                        ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
-                        : 'bg-red-500/20 text-red-300 border-red-500/30'
-                    }`}
-                  >
-                    {verifyResult.is_valid ? 'LEDGER INTEGRITY VERIFIED' : 'INTEGRITY TAMPER DETECTED'}
-                  </span>
-                  <span className="text-xs text-gray-400 font-mono">
-                    {blocks.length} Blocks Checked
-                  </span>
-                </div>
-                <p className="text-sm text-gray-200 mt-1 font-sans">{verifyResult.message}</p>
+                <span className="px-2 py-0.5 bg-black text-white text-[10px] font-mono font-black uppercase tracking-wider">
+                  {verifyResult.is_valid ? 'INTEGRITY VERIFIED' : 'TAMPER DETECTED'}
+                </span>
+                <h3 className="text-xl sm:text-2xl font-black font-mono uppercase tracking-tight mt-1">
+                  {verifyResult.is_valid
+                    ? 'Cryptographic Ledger Immutable &amp; Valid'
+                    : 'Cryptographic Hash Mismatch Detected'}
+                </h3>
+                <p className="text-xs font-mono font-bold mt-1 max-w-2xl opacity-90">
+                  {verifyResult.message}
+                </p>
               </div>
             </div>
 
-            <div className="text-xs font-mono text-gray-400 self-end md:self-center text-right shrink-0">
-              <div>Verified at: {new Date(verifyResult.verified_at).toLocaleTimeString()}</div>
-              <div className="text-[11px] text-gray-500 mt-0.5">Consensus: Local PoA Node</div>
+            <div className="flex items-center gap-2 font-mono text-xs font-black shrink-0">
+              <span className="px-3 py-1.5 bg-white text-black border-2 border-black shadow-[2px_2px_0px_0px_#000]">
+                {verifyResult.total_blocks} BLOCKS CHECKED
+              </span>
             </div>
           </div>
         </div>
       )}
 
-      {/* Visual Chain Diagram */}
-      <div className="bg-gray-900/80 rounded-2xl border border-gray-800 p-6 shadow-xl backdrop-blur-md">
-        <div className="flex items-center justify-between pb-4 border-b border-gray-800 mb-6">
-          <div className="flex items-center gap-2">
-            <Layers className="w-5 h-5 text-cyan-400" />
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-gray-200 font-mono">
-              Visual Cryptographic Chain Linkage
-            </h2>
+      {/* Block Sequence (Neo-Brutalist Concrete Tiles) */}
+      <div className="space-y-6">
+        {loading && blocks.length === 0 ? (
+          <div className="neo-card p-12 text-center font-mono font-bold text-sm text-black">
+            LOADING BLOCKCHAIN LEDGER...
           </div>
-          <span className="text-xs font-mono text-gray-400">Scroll horizontally to inspect block links →</span>
-        </div>
+        ) : (
+          blocks.map((block, idx) => {
+            const isPhish = block.prediction === 'PHISHING';
+            const isLast = idx === blocks.length - 1;
 
-        {/* Horizontal Block Chain Scrollview */}
-        <div className="overflow-x-auto pb-4 pt-2">
-          <div className="flex items-center gap-4 min-w-max px-2">
-            {blocks.map((block, idx) => {
-              const isPhishing = block.prediction === 'PHISHING';
-              const isGenesis =
-                block.prev_hash === '0000000000000000000000000000000000000000000000000000000000000000' ||
-                idx === blocks.length - 1;
-
-              return (
-                <React.Fragment key={block.index}>
-                  {/* Block Node Box */}
-                  <div
-                    className={`w-72 bg-gray-950 p-4 rounded-xl border transition-all duration-300 hover:scale-[1.02] shadow-md ${
-                      isPhishing
-                        ? 'border-red-900/60 hover:border-red-500/80'
-                        : 'border-emerald-900/60 hover:border-emerald-500/80'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 font-mono text-xs font-bold border border-cyan-800/40">
-                        Block #{block.index}
+            return (
+              <div key={block.index} className="space-y-4">
+                <div className="neo-card p-6 bg-white border-[3px] border-black space-y-5">
+                  {/* Block Header */}
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b-2 border-black gap-2">
+                    <div className="flex items-center gap-3">
+                      <span className="px-3 py-1 bg-black text-[#facc15] font-mono font-black text-sm border-2 border-black shadow-[2px_2px_0px_0px_#000]">
+                        BLOCK #{block.index}
                       </span>
+
                       <span
-                        className={`text-[10px] font-mono uppercase px-2 py-0.5 rounded-full font-bold border ${
-                          isPhishing
-                            ? 'bg-red-500/10 text-red-400 border-red-500/30'
-                            : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
+                        className={`neo-badge px-2.5 py-1 text-xs inline-flex items-center gap-1 ${
+                          isPhish ? 'bg-[#ff3366] text-white' : 'bg-[#22c55e] text-black'
                         }`}
                       >
+                        {isPhish ? <ShieldAlert className="w-3.5 h-3.5" /> : <ShieldCheck className="w-3.5 h-3.5" />}
                         {block.prediction}
                       </span>
                     </div>
 
-                    <div className="text-[11px] font-mono text-gray-400 truncate mb-2" title={block.target_url}>
-                      {block.target_url || block.url_hash.slice(0, 24) + '...'}
-                    </div>
-
-                    {/* Hash Previews */}
-                    <div className="space-y-1.5 pt-2 border-t border-gray-800 text-[10px] font-mono">
-                      <div>
-                        <span className="text-gray-500 block">HASH:</span>
-                        <span className="text-cyan-400 truncate block font-mono">
-                          {block.block_hash.slice(0, 18)}...
+                    <div className="flex items-center gap-2 font-mono text-xs font-bold text-zinc-600">
+                      {block.nonce !== undefined && (
+                        <span className="px-2 py-0.5 bg-zinc-200 border border-black text-black">
+                          NONCE: {block.nonce}
                         </span>
-                      </div>
-                      <div>
-                        <span className="text-gray-500 block">PREV:</span>
-                        <span className="text-gray-400 truncate block font-mono">
-                          {isGenesis ? 'GENESIS (0x0)' : `${block.prev_hash.slice(0, 18)}...`}
-                        </span>
-                      </div>
+                      )}
+                      <span>
+                        {new Date(block.timestamp).toLocaleString()}
+                      </span>
                     </div>
                   </div>
 
-                  {/* Chain connector arrow */}
-                  {idx < blocks.length - 1 && (
-                    <div className="flex flex-col items-center justify-center text-cyan-500/70">
-                      <div className="w-8 h-[2px] bg-gradient-to-r from-cyan-500 to-blue-500" />
-                      <span className="text-[9px] font-mono text-gray-500 mt-1">prev</span>
+                  {/* Target URL if present */}
+                  {block.target_url && (
+                    <div className="p-2.5 bg-[#fdfbf7] border-2 border-black font-mono text-xs font-bold flex items-center gap-2">
+                      <span className="text-zinc-500 uppercase shrink-0">NOTARIZED URL:</span>
+                      <span className="text-black truncate select-all">{block.target_url}</span>
                     </div>
                   )}
-                </React.Fragment>
-              );
-            })}
-          </div>
-        </div>
-      </div>
 
-      {/* Detailed Ledger Blocks Table */}
-      <div className="bg-gray-900/60 rounded-xl border border-gray-800 overflow-hidden shadow-lg backdrop-blur-sm">
-        <div className="p-4 border-b border-gray-800 flex items-center justify-between">
-          <h2 className="text-sm font-semibold uppercase tracking-wider text-gray-200 font-mono">
-            Ledger Blocks Full Details
-          </h2>
-          <span className="text-xs font-mono text-gray-400">{blocks.length} recorded blocks</span>
-        </div>
-
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-gray-950/80 border-b border-gray-800 font-mono uppercase text-gray-400 text-[11px]">
-              <tr>
-                <th className="py-3 px-4">Block #</th>
-                <th className="py-3 px-4">Prediction</th>
-                <th className="py-3 px-4">Confidence</th>
-                <th className="py-3 px-4">Block Hash</th>
-                <th className="py-3 px-4">Previous Hash</th>
-                <th className="py-3 px-4">Timestamp</th>
-                <th className="py-3 px-4">Nonce</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-800/60 font-mono">
-              {loading ? (
-                <tr>
-                  <td colSpan={7} className="py-12 text-center text-gray-500">
-                    <RefreshCw className="w-5 h-5 animate-spin mx-auto text-cyan-400 mb-2" />
-                    Loading blockchain records...
-                  </td>
-                </tr>
-              ) : (
-                blocks.map((block) => {
-                  const isPhishing = block.prediction === 'PHISHING';
-                  const isGenesis =
-                    block.prev_hash === '0000000000000000000000000000000000000000000000000000000000000000';
-
-                  return (
-                    <tr key={block.index} className="hover:bg-gray-800/40 transition-colors">
-                      {/* Block index */}
-                      <td className="py-3.5 px-4 font-bold text-cyan-400">
-                        #{block.index}
-                      </td>
-
-                      {/* Prediction */}
-                      <td className="py-3.5 px-4 whitespace-nowrap">
-                        <span
-                          className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase border ${
-                            isPhishing
-                              ? 'bg-red-500/10 text-red-400 border-red-500/30'
-                              : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
-                          }`}
+                  {/* Hashes Grid */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 font-mono text-xs">
+                    {/* Block Hash */}
+                    <div className="p-3 bg-[#f6f5f0] border-2 border-black shadow-[3px_3px_0px_0px_#000]">
+                      <div className="flex items-center justify-between text-zinc-500 font-bold mb-1">
+                        <span>BLOCK HASH (SHA-256)</span>
+                        <button
+                          onClick={() => copyToClipboard(block.block_hash, `hash-${block.index}`)}
+                          className="p-1 bg-black text-white hover:bg-zinc-800 transition-colors"
+                          title="Copy"
                         >
-                          {block.prediction}
-                        </span>
-                      </td>
-
-                      {/* Confidence */}
-                      <td className="py-3.5 px-4 text-gray-300">
-                        {block.confidence}%
-                      </td>
-
-                      {/* Block Hash */}
-                      <td className="py-3.5 px-4 max-w-xs">
-                        <div className="flex items-center gap-1.5">
-                          <span className="text-cyan-400 truncate max-w-[140px] select-all">
-                            {block.block_hash}
-                          </span>
-                          <button
-                            onClick={() => copyToClipboard(block.block_hash, `b-${block.index}`)}
-                            className="p-1 hover:text-cyan-300 text-gray-500 transition-colors"
-                            title="Copy full block hash"
-                          >
-                            {copiedHash === `b-${block.index}` ? (
-                              <Check className="w-3 h-3 text-emerald-400" />
-                            ) : (
-                              <Copy className="w-3 h-3" />
-                            )}
-                          </button>
-                        </div>
-                      </td>
-
-                      {/* Previous Hash */}
-                      <td className="py-3.5 px-4 max-w-xs">
-                        <div className="flex items-center gap-1.5">
-                          <span className="text-gray-400 truncate max-w-[140px] select-all">
-                            {isGenesis ? 'GENESIS ROOT' : block.prev_hash}
-                          </span>
-                          {!isGenesis && (
-                            <button
-                              onClick={() => copyToClipboard(block.prev_hash, `p-${block.index}`)}
-                              className="p-1 hover:text-cyan-300 text-gray-500 transition-colors"
-                              title="Copy previous hash"
-                            >
-                              {copiedHash === `p-${block.index}` ? (
-                                <Check className="w-3 h-3 text-emerald-400" />
-                              ) : (
-                                <Copy className="w-3 h-3" />
-                              )}
-                            </button>
+                          {copiedHash === `hash-${block.index}` ? (
+                            <Check className="w-3 h-3 text-[#22c55e]" />
+                          ) : (
+                            <Copy className="w-3 h-3" />
                           )}
-                        </div>
-                      </td>
+                        </button>
+                      </div>
+                      <div className="font-black text-black break-all select-all">
+                        {block.block_hash}
+                      </div>
+                    </div>
 
-                      {/* Timestamp */}
-                      <td className="py-3.5 px-4 text-gray-400 text-[11px] whitespace-nowrap">
-                        {new Date(block.timestamp).toLocaleString([], {
-                          dateStyle: 'short',
-                          timeStyle: 'medium',
-                        })}
-                      </td>
+                    {/* Previous Hash */}
+                    <div className="p-3 bg-[#f6f5f0] border-2 border-black shadow-[3px_3px_0px_0px_#000]">
+                      <div className="flex items-center justify-between text-zinc-500 font-bold mb-1">
+                        <span>PREVIOUS BLOCK HASH</span>
+                        <button
+                          onClick={() => copyToClipboard(block.prev_hash, `prev-${block.index}`)}
+                          className="p-1 bg-black text-white hover:bg-zinc-800 transition-colors"
+                          title="Copy"
+                        >
+                          {copiedHash === `prev-${block.index}` ? (
+                            <Check className="w-3 h-3 text-[#22c55e]" />
+                          ) : (
+                            <Copy className="w-3 h-3" />
+                          )}
+                        </button>
+                      </div>
+                      <div className="font-bold text-zinc-600 break-all select-all">
+                        {block.prev_hash}
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
-                      {/* Nonce */}
-                      <td className="py-3.5 px-4 text-gray-500">
-                        {block.nonce || '42910'}
-                      </td>
-                    </tr>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
-        </div>
+                {/* Chained Connector Arrow */}
+                {!isLast && (
+                  <div className="flex justify-center">
+                    <div className="flex items-center gap-1.5 px-3 py-1 bg-black text-white font-mono text-[10px] font-black uppercase border-2 border-black shadow-[2px_2px_0px_0px_#facc15]">
+                      <ArrowDown className="w-3.5 h-3.5" />
+                      <span>CRYPTOGRAPHIC LINKAGE</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })
+        )}
       </div>
     </div>
   );

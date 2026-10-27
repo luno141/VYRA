@@ -17,6 +17,7 @@ import {
   ChevronRight,
   ExternalLink,
   Layers,
+  Terminal,
 } from 'lucide-react';
 
 export default function HistoryPage() {
@@ -62,277 +63,250 @@ export default function HistoryPage() {
   }, [filteredHistory, currentPage, pageSize]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold font-mono text-gray-100 flex items-center gap-3">
-            <History className="w-7 h-7 text-cyan-400" />
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 bg-[#facc15] border-2 border-black font-mono text-[11px] font-black uppercase shadow-[2px_2px_0px_0px_#000] mb-2">
+            <Terminal className="w-3 h-3 text-black" />
+            <span>AUDIT TRAIL // RECORD CATALOG</span>
+          </div>
+          <h1 className="text-3xl sm:text-4xl font-black font-mono text-black uppercase tracking-tight">
             Threat Inspection History
           </h1>
-          <p className="text-sm text-gray-400 mt-1">
-            Historical catalog of evaluated URLs, model inferences, and blockchain records
+          <p className="text-xs font-mono font-bold text-zinc-600 mt-1">
+            Historical ledger of evaluated URLs, model predictions, and notarized blockchain block indices
           </p>
         </div>
 
         <button
           onClick={fetchHistory}
           disabled={loading}
-          className="flex items-center gap-2 px-3.5 py-2 bg-gray-900 hover:bg-gray-800 text-gray-200 border border-gray-700 rounded-lg text-xs font-mono transition-colors self-start sm:self-auto cursor-pointer"
+          className="neo-btn flex items-center gap-2 px-4 py-2.5 bg-black text-white text-xs font-mono font-black uppercase cursor-pointer"
         >
-          <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin text-cyan-400' : ''}`} />
-          <span>Refresh Data</span>
+          <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin text-[#facc15]' : ''}`} />
+          <span>REFRESH LOGS</span>
         </button>
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="bg-gray-900/70 p-4 rounded-xl border border-gray-800 flex flex-col sm:flex-row gap-3 items-center justify-between">
+      <div className="neo-card p-4 bg-white flex flex-col md:flex-row gap-4 items-center justify-between">
         {/* Search */}
-        <div className="relative w-full sm:w-80">
-          <Search className="w-4 h-4 text-gray-500 absolute left-3 top-1/2 -translate-y-1/2" />
+        <div className="relative w-full md:w-96">
           <input
             type="text"
-            placeholder="Search by URL or domain..."
+            placeholder="FILTER BY URL OR DOMAIN..."
             value={searchTerm}
             onChange={(e) => {
               setSearchTerm(e.target.value);
               setCurrentPage(1);
             }}
-            className="w-full pl-9 pr-3 py-2 bg-gray-950 border border-gray-700 rounded-lg text-xs font-mono text-gray-200 placeholder-gray-500 focus:outline-none focus:border-cyan-500"
+            className="w-full bg-[#fdfbf7] border-2 border-black px-4 py-2 text-xs font-mono font-bold text-black placeholder:text-zinc-400 focus:outline-none shadow-[2px_2px_0px_0px_#000]"
           />
         </div>
 
-        {/* Verdict filter tabs */}
-        <div className="flex items-center gap-1.5 w-full sm:w-auto bg-gray-950 p-1 rounded-lg border border-gray-800 text-xs">
+        {/* Filter Pills */}
+        <div className="flex items-center gap-2 w-full md:w-auto font-mono text-xs font-black">
           <button
             onClick={() => {
               setVerdictFilter('ALL');
               setCurrentPage(1);
             }}
-            className={`px-3 py-1.5 rounded-md font-medium transition-colors ${
+            className={`px-3 py-1.5 border-2 border-black transition-all ${
               verdictFilter === 'ALL'
-                ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30'
-                : 'text-gray-400 hover:text-gray-200'
+                ? 'bg-black text-white shadow-[2px_2px_0px_0px_#facc15]'
+                : 'bg-white text-black hover:bg-zinc-100'
             }`}
           >
-            All ({history.length})
+            ALL ({history.length})
           </button>
+
           <button
             onClick={() => {
               setVerdictFilter('PHISHING');
               setCurrentPage(1);
             }}
-            className={`px-3 py-1.5 rounded-md font-medium transition-colors flex items-center gap-1 ${
+            className={`px-3 py-1.5 border-2 border-black transition-all ${
               verdictFilter === 'PHISHING'
-                ? 'bg-red-500/20 text-red-400 border border-red-500/30'
-                : 'text-gray-400 hover:text-red-400'
+                ? 'bg-[#ff3366] text-white shadow-[2px_2px_0px_0px_#000]'
+                : 'bg-white text-black hover:bg-zinc-100'
             }`}
           >
-            <span className="w-2 h-2 rounded-full bg-red-500" />
-            Phishing ({history.filter((h) => h.verdict === 'PHISHING').length})
+            ⚠️ PHISHING
           </button>
+
           <button
             onClick={() => {
               setVerdictFilter('LEGITIMATE');
               setCurrentPage(1);
             }}
-            className={`px-3 py-1.5 rounded-md font-medium transition-colors flex items-center gap-1 ${
+            className={`px-3 py-1.5 border-2 border-black transition-all ${
               verdictFilter === 'LEGITIMATE'
-                ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-                : 'text-gray-400 hover:text-emerald-400'
+                ? 'bg-[#22c55e] text-black shadow-[2px_2px_0px_0px_#000]'
+                : 'bg-white text-black hover:bg-zinc-100'
             }`}
           >
-            <span className="w-2 h-2 rounded-full bg-emerald-500" />
-            Legitimate ({history.filter((h) => h.verdict === 'LEGITIMATE').length})
+            🛡️ LEGITIMATE
           </button>
         </div>
       </div>
 
-      {/* History Table */}
-      <div className="bg-gray-900/60 rounded-xl border border-gray-800 overflow-hidden shadow-lg backdrop-blur-sm">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-gray-950/80 border-b border-gray-800 font-mono uppercase text-gray-400 text-[11px]">
-              <tr>
-                <th className="py-3.5 px-4">Scanned URL</th>
-                <th className="py-3.5 px-4">Verdict</th>
-                <th className="py-3.5 px-4">Confidence</th>
-                <th className="py-3.5 px-4">Risk Score</th>
-                <th className="py-3.5 px-4">Timestamp</th>
-                <th className="py-3.5 px-4 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-800/60">
-              {loading ? (
+      {/* History Table (Neo-Brutalist Layout) */}
+      <div className="neo-card bg-white overflow-hidden">
+        {loading && history.length === 0 ? (
+          <div className="p-12 text-center font-mono font-bold text-sm text-black">
+            LOADING AUDIT LOGS...
+          </div>
+        ) : filteredHistory.length === 0 ? (
+          <div className="p-12 text-center font-mono font-bold text-sm text-zinc-500">
+            NO SCAN RECORDS MATCHING QUERY.
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left font-mono text-xs">
+              <thead className="bg-[#facc15] border-b-2 border-black text-black font-black uppercase text-[11px] tracking-wider select-none">
                 <tr>
-                  <td colSpan={6} className="py-12 text-center text-gray-500 font-mono">
-                    <RefreshCw className="w-5 h-5 animate-spin mx-auto text-cyan-400 mb-2" />
-                    Loading threat history...
-                  </td>
+                  <th className="py-3 px-4">VERDICT</th>
+                  <th className="py-3 px-4">TARGET URL</th>
+                  <th className="py-3 px-4">CONFIDENCE</th>
+                  <th className="py-3 px-4">THREAT SCORE</th>
+                  <th className="py-3 px-4">BLOCK INDEX</th>
+                  <th className="py-3 px-4">TIMESTAMP</th>
+                  <th className="py-3 px-4 text-right">ACTION</th>
                 </tr>
-              ) : paginatedHistory.length === 0 ? (
-                <tr>
-                  <td colSpan={6} className="py-12 text-center text-gray-500 font-mono">
-                    No scan records found matching query criteria.
-                  </td>
-                </tr>
-              ) : (
-                paginatedHistory.map((item) => {
-                  const isPhishing = item.verdict === 'PHISHING';
+              </thead>
+              <tbody className="divide-y-2 divide-black">
+                {paginatedHistory.map((item) => {
+                  const isPhish = item.verdict === 'PHISHING';
+                  const displayConf = item.confidence <= 1 ? (item.confidence * 100).toFixed(1) : Number(item.confidence).toFixed(1);
 
                   return (
                     <tr
                       key={item.id}
-                      onClick={() => setSelectedScan(item)}
-                      className={`cursor-pointer transition-colors group ${
-                        isPhishing
-                          ? 'hover:bg-red-950/20 border-l-2 border-l-transparent hover:border-l-red-500'
-                          : 'hover:bg-emerald-950/20 border-l-2 border-l-transparent hover:border-l-emerald-500'
-                      }`}
+                      className="hover:bg-[#fef9c3] transition-colors font-bold text-black"
                     >
-                      {/* URL */}
-                      <td className="py-3.5 px-4 max-w-xs sm:max-w-md">
-                        <div className="flex items-center gap-2">
-                          {isPhishing ? (
-                            <ShieldAlert className="w-4 h-4 text-red-400 shrink-0" />
-                          ) : (
-                            <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
-                          )}
-                          <span className="font-mono text-gray-200 truncate group-hover:text-cyan-300 transition-colors">
-                            {item.url}
-                          </span>
-                        </div>
-                      </td>
-
-                      {/* Verdict */}
-                      <td className="py-3.5 px-4 whitespace-nowrap">
+                      {/* Verdict Badge */}
+                      <td className="py-3 px-4 shrink-0">
                         <span
-                          className={`px-2.5 py-0.5 rounded-full font-bold font-mono text-[10px] uppercase border ${
-                            isPhishing
-                              ? 'bg-red-500/10 text-red-400 border-red-500/30'
-                              : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
+                          className={`neo-badge px-2.5 py-1 text-[11px] inline-flex items-center gap-1.5 ${
+                            isPhish ? 'bg-[#ff3366] text-white' : 'bg-[#22c55e] text-black'
                           }`}
                         >
+                          {isPhish ? <ShieldAlert className="w-3.5 h-3.5" /> : <ShieldCheck className="w-3.5 h-3.5" />}
                           {item.verdict}
                         </span>
                       </td>
 
+                      {/* URL */}
+                      <td className="py-3 px-4 max-w-xs truncate" title={item.url}>
+                        <span className="text-black font-mono font-bold">{item.url}</span>
+                      </td>
+
                       {/* Confidence */}
-                      <td className="py-3.5 px-4 whitespace-nowrap font-mono text-gray-300">
-                        {item.confidence}%
+                      <td className="py-3 px-4">
+                        <span className="font-black">{displayConf}%</span>
                       </td>
 
                       {/* Risk Score */}
-                      <td className="py-3.5 px-4 whitespace-nowrap">
-                        <div className="flex items-center gap-2">
-                          <span
-                            className={`font-mono font-bold ${
-                              item.risk_score >= 70
-                                ? 'text-red-400'
-                                : item.risk_score >= 35
-                                ? 'text-amber-400'
-                                : 'text-emerald-400'
-                            }`}
-                          >
-                            {item.risk_score}
-                          </span>
-                          <div className="w-16 h-1.5 bg-gray-800 rounded-full overflow-hidden">
-                            <div
-                              className="h-full rounded-full"
-                              style={{
-                                width: `${item.risk_score}%`,
-                                backgroundColor:
-                                  item.risk_score >= 70
-                                    ? '#ef4444'
-                                    : item.risk_score >= 35
-                                    ? '#f59e0b'
-                                    : '#22c55e',
-                              }}
-                            />
-                          </div>
-                        </div>
+                      <td className="py-3 px-4">
+                        <span
+                          className={`px-2 py-0.5 border border-black font-black ${
+                            item.risk_score >= 70
+                              ? 'bg-[#ff3366] text-white'
+                              : item.risk_score >= 35
+                              ? 'bg-[#facc15] text-black'
+                              : 'bg-[#22c55e] text-black'
+                          }`}
+                        >
+                          {item.risk_score}/100
+                        </span>
                       </td>
 
-                      {/* Timestamp */}
-                      <td className="py-3.5 px-4 whitespace-nowrap text-gray-400 font-mono text-[11px]">
-                        {new Date(item.timestamp).toLocaleString([], {
-                          dateStyle: 'short',
-                          timeStyle: 'medium',
+                      {/* Blockchain Block */}
+                      <td className="py-3 px-4">
+                        <span className="px-2 py-0.5 bg-black text-[#facc15] border border-black font-black text-[11px]">
+                          #{item.blockchain?.block_index || 1}
+                        </span>
+                      </td>
+
+                      {/* Time */}
+                      <td className="py-3 px-4 text-zinc-600 text-[11px]">
+                        {new Date(item.timestamp).toLocaleDateString([], {
+                          month: 'short',
+                          day: 'numeric',
+                        })}{' '}
+                        {new Date(item.timestamp).toLocaleTimeString([], {
+                          hour: '2-digit',
+                          minute: '2-digit',
                         })}
                       </td>
 
-                      {/* Actions */}
-                      <td className="py-3.5 px-4 whitespace-nowrap text-right">
+                      {/* Inspect Button */}
+                      <td className="py-3 px-4 text-right">
                         <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setSelectedScan(item);
-                          }}
-                          className="px-2.5 py-1 rounded bg-gray-800 hover:bg-cyan-950 hover:text-cyan-400 text-gray-300 border border-gray-700 hover:border-cyan-800 transition-colors font-mono text-[11px] inline-flex items-center gap-1"
+                          onClick={() => setSelectedScan(item)}
+                          className="neo-btn px-3 py-1 bg-white text-black hover:bg-[#facc15] text-[11px] font-black uppercase cursor-pointer"
                         >
-                          <Eye className="w-3.5 h-3.5" />
-                          <span>Inspect</span>
+                          INSPECT
                         </button>
                       </td>
                     </tr>
                   );
-                })
-              )}
-            </tbody>
-          </table>
-        </div>
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
 
         {/* Pagination Bar */}
-        <div className="bg-gray-950/80 px-4 py-3 border-t border-gray-800 flex items-center justify-between text-xs text-gray-400 font-mono">
-          <div>
-            Showing <span className="text-gray-200">{filteredHistory.length > 0 ? (currentPage - 1) * pageSize + 1 : 0}</span> to{' '}
-            <span className="text-gray-200">
-              {Math.min(currentPage * pageSize, filteredHistory.length)}
-            </span>{' '}
-            of <span className="text-gray-200">{filteredHistory.length}</span> results
-          </div>
-
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-              disabled={currentPage === 1}
-              className="p-1 rounded bg-gray-900 border border-gray-800 text-gray-300 hover:bg-gray-800 disabled:opacity-40 disabled:cursor-not-allowed"
-            >
-              <ChevronLeft className="w-4 h-4" />
-            </button>
-            <span>
-              Page {currentPage} of {totalPages}
+        {totalPages > 1 && (
+          <div className="p-4 bg-[#fdfbf7] border-t-2 border-black flex items-center justify-between font-mono text-xs font-black">
+            <span className="text-zinc-600">
+              PAGE {currentPage} OF {totalPages} ({filteredHistory.length} ENTRIES)
             </span>
-            <button
-              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-              disabled={currentPage === totalPages}
-              className="p-1 rounded bg-gray-900 border border-gray-800 text-gray-300 hover:bg-gray-800 disabled:opacity-40 disabled:cursor-not-allowed"
-            >
-              <ChevronRight className="w-4 h-4" />
-            </button>
+
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+                className="neo-btn px-3 py-1 bg-white text-black disabled:opacity-40 cursor-pointer"
+              >
+                &lt; PREV
+              </button>
+              <button
+                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                disabled={currentPage === totalPages}
+                className="neo-btn px-3 py-1 bg-white text-black disabled:opacity-40 cursor-pointer"
+              >
+                NEXT &gt;
+              </button>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
-      {/* Detail Modal */}
+      {/* Detail Inspection Modal */}
       {selectedScan && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto bg-gray-950 border border-gray-800 rounded-2xl p-6 shadow-2xl space-y-6">
-            <div className="flex items-center justify-between pb-3 border-b border-gray-800">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in">
+          <div className="neo-card bg-[#f6f5f0] max-w-4xl w-full max-h-[90vh] overflow-y-auto p-6 space-y-6">
+            <div className="flex items-center justify-between pb-3 border-b-2 border-black">
               <div className="flex items-center gap-2">
-                <span className="text-xs font-mono text-cyan-400 bg-cyan-950/60 px-2 py-0.5 rounded border border-cyan-800/40">
-                  SCAN AUDIT LOG #{selectedScan.id}
+                <span className="px-2 py-0.5 bg-black text-white font-mono text-xs font-black">
+                  INSPECTION VIEW
+                </span>
+                <span className="font-mono text-xs font-bold text-zinc-600">
+                  RECORD #{selectedScan.id}
                 </span>
               </div>
+
               <button
                 onClick={() => setSelectedScan(null)}
-                className="p-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 transition-colors"
+                className="neo-btn p-1 bg-[#ff3366] text-white cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            {/* Embedded Scan Result in Modal */}
             <ScanResult result={selectedScan} />
           </div>
         </div>

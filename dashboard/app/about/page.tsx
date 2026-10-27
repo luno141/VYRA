@@ -8,265 +8,190 @@ import {
   Binary,
   Code2,
   GraduationCap,
-  Sparkles,
+  Terminal,
   ArrowRight,
   Server,
   Globe,
-  CheckCircle,
+  CheckCircle2,
 } from 'lucide-react';
 
 export default function AboutPage() {
   return (
-    <div className="space-y-12 max-w-5xl mx-auto py-4">
+    <div className="space-y-10 max-w-5xl mx-auto py-4">
       {/* Hero Overview */}
       <div className="space-y-4">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/60 border border-cyan-800/40 text-cyan-400 text-xs font-mono">
-          <Sparkles className="w-3.5 h-3.5" />
-          <span>Academic & Research Project Documentation</span>
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#facc15] border-2 border-black font-mono text-xs font-black uppercase shadow-[3px_3px_0px_0px_#000]">
+          <Terminal className="w-3.5 h-3.5 text-black" />
+          <span>ACADEMIC THESIS // SYSTEM ARCHITECTURE SPECIFICATION</span>
         </div>
 
-        <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-white font-mono">
+        <h1 className="text-4xl sm:text-6xl font-black tracking-tight text-black font-mono leading-none">
           ABOUT{' '}
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-300 to-blue-500">
+          <span className="bg-[#ccff00] px-2 py-0.5 border-2 border-black shadow-[4px_4px_0px_0px_#000] inline-block -rotate-1">
             VYRA
           </span>
         </h1>
 
-        <div className="text-lg text-gray-300 font-medium">
-          Verifiable Yield Risk Assessment & Real-Time Phishing Defense
+        <div className="text-xl font-mono font-black text-black">
+          Verifiable Yield Risk Assessment &amp; Real-Time Phishing Defense
         </div>
 
-        <p className="text-gray-400 text-sm leading-relaxed max-w-4xl">
-          VYRA is an advanced cybersecurity research framework developed to confront modern evasive
-          credential phishing, homograph attacks, and zero-day malicious domains. By fusing
-          high-dimensional feature extraction with explainable artificial intelligence (TreeSHAP) and
-          tamper-evident blockchain auditing, VYRA not only detects attacks in real time but also produces
-          court-admissible, cryptographically immutable evidence trails.
+        <p className="text-black font-mono font-bold text-sm leading-relaxed max-w-4xl bg-white p-4 border-2 border-black shadow-[4px_4px_0px_0px_#000]">
+          VYRA is an advanced cybersecurity engineering framework developed to counter modern evasive
+          credential harvesting, zero-day phishing infrastructure, and cloud abuse. By synthesizing
+          35-dimensional lexical feature extraction, explainable machine learning (TreeSHAP), and an
+          append-only SHA-256 Proof-of-Work blockchain audit trail, VYRA delivers both sub-100ms real-time
+          interception and tamper-evident cryptographic provenance.
         </p>
       </div>
 
       {/* Research Objective Card */}
-      <div className="bg-gray-900/60 rounded-2xl border border-gray-800 p-6 sm:p-8 backdrop-blur-md space-y-4">
-        <h2 className="text-lg font-bold font-mono text-cyan-400 uppercase tracking-wider flex items-center gap-2">
-          <GraduationCap className="w-5 h-5" />
-          Research Objective & Thesis
-        </h2>
-        <div className="text-sm text-gray-300 space-y-3 leading-relaxed">
-          <p>
-            <strong className="text-gray-100">Academic Title:</strong> Explainable Machine Learning
-            with Cryptographic Ledger Immutability for Real-Time Zero-Hour Phishing Threat Neutralization.
+      <div className="neo-card p-6 sm:p-8 bg-[#fdfbf7] space-y-4">
+        <div className="flex items-center gap-2">
+          <GraduationCap className="w-6 h-6 text-black" />
+          <h2 className="text-lg font-black font-mono uppercase tracking-wider text-black">
+            RESEARCH OBJECTIVE &amp; THESIS
+          </h2>
+        </div>
+
+        <div className="text-xs sm:text-sm font-mono font-bold text-black space-y-3 leading-relaxed">
+          <p className="p-3 bg-white border-2 border-black">
+            <span className="bg-black text-white px-1.5 py-0.5 mr-2">THESIS TITLE:</span>
+            Explainable Artificial Intelligence and Blockchain-Integrated Framework for Real-Time Detection and Prevention of Previously Unseen Phishing Attacks.
           </p>
           <p>
             Traditional black-box machine learning models suffer from opacity, preventing security
-            analysts from understanding why a benign domain was flagged or why an evasive attack bypassed
-            rules. Simultaneously, centralized security logs remain vulnerable to internal tampering,
-            retroactive log deletion, and evidence corruption.
+            operators from understanding why a benign domain was flagged or why an evasive attack slipped past
+            heuristics. Concurrently, centralized security logs remain vulnerable to insider mutation,
+            retroactive log tampering, and evidence corruption.
           </p>
           <p>
-            VYRA solves both challenges: (1) calculating exact marginal feature attributions via
-            local SHAP force algorithms so operators inspect the underlying mathematical reasons, and (2)
+            VYRA bridges this gap: (1) calculating exact marginal feature attributions via
+            local TreeSHAP so operators inspect the underlying mathematical reasons, and (2)
             committing every inference payload, feature hash, and timestamp directly into an append-only
             cryptographic blockchain ledger.
           </p>
         </div>
       </div>
 
-      {/* HTML / CSS Interactive Architecture Diagram */}
-      <div className="bg-gray-900/80 rounded-2xl border border-gray-800 p-6 sm:p-8 shadow-2xl backdrop-blur-md space-y-6">
+      {/* Architecture Pipeline Boxes */}
+      <div className="neo-card p-6 sm:p-8 bg-white space-y-6">
         <div>
-          <h2 className="text-lg font-bold font-mono text-gray-100 uppercase tracking-wider flex items-center gap-2">
-            <Layers className="w-5 h-5 text-cyan-400" />
-            System Architecture Pipeline
+          <h2 className="text-lg font-black font-mono uppercase tracking-wider text-black flex items-center gap-2">
+            <Layers className="w-5 h-5 text-black" />
+            END-TO-END SYSTEM PIPELINE
           </h2>
-          <p className="text-xs text-gray-400 mt-1">
-            End-to-end data lifecycle from browser interception to cryptographic ledger commitment
+          <p className="text-xs font-mono font-bold text-zinc-600 mt-1">
+            Data lifecycle from browser navigation intercept to cryptographic ledger notarization
           </p>
         </div>
 
-        {/* CSS Diagram Flow */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 relative pt-2">
-          {/* Step 1 */}
-          <div className="bg-gray-950 p-5 rounded-xl border border-gray-800 flex flex-col justify-between relative group hover:border-cyan-500/50 transition-all">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Station 1 */}
+          <div className="p-4 bg-[#fdfbf7] border-2 border-black shadow-[3px_3px_0px_0px_#000] space-y-2 flex flex-col justify-between">
             <div className="space-y-2">
-              <div className="w-8 h-8 rounded-lg bg-cyan-950/80 border border-cyan-800/50 flex items-center justify-center text-cyan-400 font-mono font-bold text-xs">
+              <span className="w-7 h-7 bg-black text-[#facc15] font-mono font-black text-xs flex items-center justify-center border border-black">
                 01
-              </div>
-              <h3 className="font-mono text-sm font-bold text-gray-200">Browser Guard / Client</h3>
-              <p className="text-xs text-gray-400">
-                Chrome/Firefox MV3 extension intercepts navigation requests and transmits URL payloads.
+              </span>
+              <h3 className="font-mono text-xs font-black uppercase text-black">CLIENT INTERCEPTOR</h3>
+              <p className="text-[11px] font-mono font-bold text-zinc-600">
+                Manifest V3 extension hooks navigation events and forwards URLs for evaluation.
               </p>
             </div>
-            <div className="mt-4 pt-3 border-t border-gray-800/60 font-mono text-[10px] text-cyan-400 flex items-center gap-1">
-              <span>WebNavigation API</span>
+            <div className="pt-2 border-t border-zinc-300 font-mono text-[10px] font-black text-black">
+              TECH: Chrome WebNav API
             </div>
           </div>
 
-          {/* Step 2 */}
-          <div className="bg-gray-950 p-5 rounded-xl border border-gray-800 flex flex-col justify-between relative group hover:border-cyan-500/50 transition-all">
+          {/* Station 2 */}
+          <div className="p-4 bg-[#fdfbf7] border-2 border-black shadow-[3px_3px_0px_0px_#000] space-y-2 flex flex-col justify-between">
             <div className="space-y-2">
-              <div className="w-8 h-8 rounded-lg bg-blue-950/80 border border-blue-800/50 flex items-center justify-center text-blue-400 font-mono font-bold text-xs">
+              <span className="w-7 h-7 bg-black text-[#38bdf8] font-mono font-black text-xs flex items-center justify-center border border-black">
                 02
-              </div>
-              <h3 className="font-mono text-sm font-bold text-gray-200">Feature Extraction</h3>
-              <p className="text-xs text-gray-400">
-                Calculates Shannon entropy, domain age, SSL validity, DNS resolution, and OTX threat feeds.
+              </span>
+              <h3 className="font-mono text-xs font-black uppercase text-black">FEATURE VECTORIZER</h3>
+              <p className="text-[11px] font-mono font-bold text-zinc-600">
+                Extracts 35 lexical, structural, host, and Shannon entropy attributes in parallel.
               </p>
             </div>
-            <div className="mt-4 pt-3 border-t border-gray-800/60 font-mono text-[10px] text-blue-400 flex items-center gap-1">
-              <span>32+ Extracted Vectors</span>
+            <div className="pt-2 border-t border-zinc-300 font-mono text-[10px] font-black text-black">
+              TECH: NumPy + tldextract
             </div>
           </div>
 
-          {/* Step 3 */}
-          <div className="bg-gray-950 p-5 rounded-xl border border-gray-800 flex flex-col justify-between relative group hover:border-cyan-500/50 transition-all">
+          {/* Station 3 */}
+          <div className="p-4 bg-[#fdfbf7] border-2 border-black shadow-[3px_3px_0px_0px_#000] space-y-2 flex flex-col justify-between">
             <div className="space-y-2">
-              <div className="w-8 h-8 rounded-lg bg-purple-950/80 border border-purple-800/50 flex items-center justify-center text-purple-400 font-mono font-bold text-xs">
+              <span className="w-7 h-7 bg-black text-[#ff3366] font-mono font-black text-xs flex items-center justify-center border border-black">
                 03
-              </div>
-              <h3 className="font-mono text-sm font-bold text-gray-200">ML & TreeSHAP</h3>
-              <p className="text-xs text-gray-400">
-                Ensemble gradient boosting predicts risk score; TreeSHAP yields local feature attributions.
+              </span>
+              <h3 className="font-mono text-xs font-black uppercase text-black">XGBOOST + TREESHAP</h3>
+              <p className="text-[11px] font-mono font-bold text-zinc-600">
+                Predicts threat probability with 94% live detection and computes SHAP force values.
               </p>
             </div>
-            <div className="mt-4 pt-3 border-t border-gray-800/60 font-mono text-[10px] text-purple-400 flex items-center gap-1">
-              <span>F1: 0.992 | Shapley Math</span>
+            <div className="pt-2 border-t border-zinc-300 font-mono text-[10px] font-black text-black">
+              TECH: XGBoost + TreeExplainer
             </div>
           </div>
 
-          {/* Step 4 */}
-          <div className="bg-gray-950 p-5 rounded-xl border border-gray-800 flex flex-col justify-between relative group hover:border-cyan-500/50 transition-all">
+          {/* Station 4 */}
+          <div className="p-4 bg-[#fdfbf7] border-2 border-black shadow-[3px_3px_0px_0px_#000] space-y-2 flex flex-col justify-between">
             <div className="space-y-2">
-              <div className="w-8 h-8 rounded-lg bg-emerald-950/80 border border-emerald-800/50 flex items-center justify-center text-emerald-400 font-mono font-bold text-xs">
+              <span className="w-7 h-7 bg-black text-[#ccff00] font-mono font-black text-xs flex items-center justify-center border border-black">
                 04
-              </div>
-              <h3 className="font-mono text-sm font-bold text-gray-200">Blockchain Ledger</h3>
-              <p className="text-xs text-gray-400">
-                Cryptographic block is mined with SHA-256 hash linkage, ensuring non-repudiation.
+              </span>
+              <h3 className="font-mono text-xs font-black uppercase text-black">BLOCKCHAIN NOTARY</h3>
+              <p className="text-[11px] font-mono font-bold text-zinc-600">
+                Mines Proof-of-Work block (difficulty=2) linking SHA-256 hash to permanent ledger.
               </p>
             </div>
-            <div className="mt-4 pt-3 border-t border-gray-800/60 font-mono text-[10px] text-emerald-400 flex items-center gap-1">
-              <span>Tamper-Evident SHA-256</span>
+            <div className="pt-2 border-t border-zinc-300 font-mono text-[10px] font-black text-black">
+              TECH: SHA-256 PoW Ledger
             </div>
           </div>
         </div>
       </div>
 
-      {/* Technology Stack Grid */}
-      <div className="space-y-4">
-        <h2 className="text-lg font-bold font-mono text-gray-100 uppercase tracking-wider flex items-center gap-2">
-          <Code2 className="w-5 h-5 text-cyan-400" />
-          Technical Stack
-        </h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {/* Frontend */}
-          <div className="bg-gray-900/60 p-5 rounded-xl border border-gray-800 space-y-3">
-            <div className="text-xs font-mono font-bold text-cyan-400 uppercase tracking-wider">
-              Frontend & Presentation
-            </div>
-            <ul className="space-y-2 text-xs text-gray-300 font-mono">
-              <li className="flex items-center gap-2">
-                <CheckCircle className="w-3.5 h-3.5 text-cyan-400" />
-                <span>Next.js 14 (App Router)</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <CheckCircle className="w-3.5 h-3.5 text-cyan-400" />
-                <span>React 19 & TypeScript</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <CheckCircle className="w-3.5 h-3.5 text-cyan-400" />
-                <span>Tailwind CSS v4 Engine</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <CheckCircle className="w-3.5 h-3.5 text-cyan-400" />
-                <span>Custom CSS/SVG Visualizations</span>
-              </li>
-            </ul>
+      {/* Technical Specifications Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 font-mono text-xs">
+        <div className="neo-card p-5 bg-[#facc15] space-y-3">
+          <div className="font-black text-sm uppercase text-black border-b-2 border-black pb-2">
+            MODEL ARCHITECTURE
           </div>
-
-          {/* Machine Learning & AI */}
-          <div className="bg-gray-900/60 p-5 rounded-xl border border-gray-800 space-y-3">
-            <div className="text-xs font-mono font-bold text-blue-400 uppercase tracking-wider">
-              Machine Learning & XAI
-            </div>
-            <ul className="space-y-2 text-xs text-gray-300 font-mono">
-              <li className="flex items-center gap-2">
-                <CheckCircle className="w-3.5 h-3.5 text-blue-400" />
-                <span>LightGBM & XGBoost Classifier</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <CheckCircle className="w-3.5 h-3.5 text-blue-400" />
-                <span>TreeSHAP Local Attribution</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <CheckCircle className="w-3.5 h-3.5 text-blue-400" />
-                <span>Scikit-Learn & NumPy</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <CheckCircle className="w-3.5 h-3.5 text-blue-400" />
-                <span>Lexical & Heuristic Feature Extractors</span>
-              </li>
-            </ul>
-          </div>
-
-          {/* Backend & Blockchain */}
-          <div className="bg-gray-900/60 p-5 rounded-xl border border-gray-800 space-y-3">
-            <div className="text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider">
-              Backend & Cryptography
-            </div>
-            <ul className="space-y-2 text-xs text-gray-300 font-mono">
-              <li className="flex items-center gap-2">
-                <CheckCircle className="w-3.5 h-3.5 text-emerald-400" />
-                <span>FastAPI Async Python Framework</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <CheckCircle className="w-3.5 h-3.5 text-emerald-400" />
-                <span>SHA-256 Merkle Block Ledger</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <CheckCircle className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Cryptographic Chain Verification</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <CheckCircle className="w-3.5 h-3.5 text-emerald-400" />
-                <span>AlienVault OTX & Threat Intelligence</span>
-              </li>
-            </ul>
-          </div>
+          <ul className="space-y-1.5 font-bold text-black">
+            <li>• Algorithm: XGBoost Hist Gradient Boosting</li>
+            <li>• Training Dataset: 111,024 Real URLs</li>
+            <li>• Sources: PhishTank + Tranco Top 1M</li>
+            <li>• Live OpenPhish Detection: 94.0%</li>
+            <li>• Test ROC-AUC: 0.9944</li>
+          </ul>
         </div>
-      </div>
 
-      {/* Academic & University Affiliation Placeholders */}
-      <div className="bg-gray-900/60 rounded-xl border border-gray-800 p-6 space-y-4">
-        <h2 className="text-base font-bold font-mono text-gray-200 uppercase tracking-wider flex items-center gap-2">
-          <GraduationCap className="w-4 h-4 text-cyan-400" />
-          Academic Information & Institutional Context
-        </h2>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 text-xs font-mono">
-          <div className="bg-gray-950 p-3.5 rounded-lg border border-gray-800">
-            <div className="text-gray-500 uppercase">Degree Program</div>
-            <div className="text-gray-200 font-bold mt-1">B.Tech Computer Science</div>
-            <div className="text-cyan-400 text-[10px] mt-0.5">Semester V Capstone</div>
+        <div className="neo-card p-5 bg-[#38bdf8] space-y-3">
+          <div className="font-black text-sm uppercase text-black border-b-2 border-black pb-2">
+            BLOCKCHAIN ENGINE
           </div>
+          <ul className="space-y-1.5 font-bold text-black">
+            <li>• Consensus: Proof-of-Work (PoW)</li>
+            <li>• Cryptographic Hash: SHA-256</li>
+            <li>• Target Difficulty: 2 Leading Zeros</li>
+            <li>• Average Mining Time: &lt; 50ms</li>
+            <li>• Verification: Continuous Merkle Linkage</li>
+          </ul>
+        </div>
 
-          <div className="bg-gray-950 p-3.5 rounded-lg border border-gray-800">
-            <div className="text-gray-500 uppercase">Specialization</div>
-            <div className="text-gray-200 font-bold mt-1">Cybersecurity & AI Systems</div>
-            <div className="text-cyan-400 text-[10px] mt-0.5">Applied ML Track</div>
+        <div className="neo-card p-5 bg-[#ff3366] text-white space-y-3">
+          <div className="font-black text-sm uppercase text-white border-b-2 border-white pb-2">
+            THREAT INTELLIGENCE
           </div>
-
-          <div className="bg-gray-950 p-3.5 rounded-lg border border-gray-800">
-            <div className="text-gray-500 uppercase">Supervision</div>
-            <div className="text-gray-200 font-bold mt-1">Faculty of Cyber Defense</div>
-            <div className="text-cyan-400 text-[10px] mt-0.5">Research Advisory Board</div>
-          </div>
-
-          <div className="bg-gray-950 p-3.5 rounded-lg border border-gray-800">
-            <div className="text-gray-500 uppercase">Artifact Version</div>
-            <div className="text-gray-200 font-bold mt-1">Release v1.0.0-PROD</div>
-            <div className="text-emerald-400 text-[10px] mt-0.5">Validated Architecture</div>
-          </div>
+          <ul className="space-y-1.5 font-bold text-white">
+            <li>• OpenPhish Live Feed Stream</li>
+            <li>• Brand Impersonation Heuristics</li>
+            <li>• Phishing Kit Signatures Analyzer</li>
+            <li>• Google Safe Browsing Patterns</li>
+            <li>• Subdomain Masquerading Filters</li>
+          </ul>
         </div>
       </div>
     </div>
