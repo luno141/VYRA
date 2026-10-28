@@ -15,7 +15,26 @@ const scanCache = new Map();
 /** Returns true if url looks like a real http/https page (not an extension/NTP page). */
 function isNavigableUrl(url) {
   if (!url) return false;
-  return url.startsWith('http://') || url.startsWith('https://');
+  if (!url.startsWith('http://') && !url.startsWith('https://')) return false;
+  try {
+    const parsed = new URL(url);
+    const host = parsed.hostname.toLowerCase();
+    if (
+      host === 'localhost' ||
+      host === '127.0.0.1' ||
+      host === '0.0.0.0' ||
+      host.endsWith('.local') ||
+      host.endsWith('.test') ||
+      host.startsWith('192.168.') ||
+      host.startsWith('10.') ||
+      host.startsWith('172.16.')
+    ) {
+      return false;
+    }
+  } catch (_) {
+    return false;
+  }
+  return true;
 }
 
 /** Increments a numeric counter in chrome.storage.local. */

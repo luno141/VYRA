@@ -1,17 +1,15 @@
 (function () {
   'use strict';
 
-  // DOM References
   const statusBadge   = document.getElementById('status-badge');
   const urlScheme     = document.getElementById('url-scheme');
   const urlDisplay    = document.getElementById('url-display');
-  
+
   const verdictCard   = document.getElementById('verdict-card');
-  const verdictText   = document.getElementById('verdict-text');
-  const riskScoreText = document.getElementById('risk-score');
+  const verdictBadge  = document.getElementById('verdict-badge');
+  const riskScoreEl   = document.getElementById('risk-score');
   const scoreBar      = document.getElementById('score-bar');
 
-  // Sub-intelligence Pillars
   const subMlScore    = document.getElementById('sub-ml-score');
   const subMlTag      = document.getElementById('sub-ml-tag');
   const subFeedScore  = document.getElementById('sub-feed-score');
@@ -21,14 +19,10 @@
   const subDomainVal  = document.getElementById('sub-domain-val');
   const subDomainTag  = document.getElementById('sub-domain-tag');
 
-  // SHAP Container
   const shapContainer = document.getElementById('shap-container');
   const shapList      = document.getElementById('shap-mini-list');
-
-  // Blockchain
   const chainBlockNum = document.getElementById('chain-block-num');
 
-  // Controls & Telemetry
   const btnScan       = document.getElementById('btn-scan');
   const btnScanText   = document.getElementById('btn-scan-text');
   const statScans     = document.getElementById('stat-scans');
@@ -36,219 +30,198 @@
 
   let currentTabUrl = '';
 
-  function escHtml(s) {
-    return String(s)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;');
+  function esc(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   }
 
-  function setScanningState() {
-    statusBadge.className = 'neo-badge neo-badge-yellow';
-    statusBadge.textContent = 'SCANNING...';
-    btnScanText.textContent = '⚡ RUNNING DEEP PIPELINE...';
+  function setBadge(el, cls, text) {
+    el.className = 'badge ' + cls;
+    el.textContent = text;
+  }
+
+  function setScanning() {
+    setBadge(statusBadge, 'badge-warn', 'Scanning…');
+    btnScanText.textContent = '⚡ Scanning…';
     btnScan.disabled = true;
   }
 
-  function resetScanButton() {
-    btnScanText.textContent = '⚡ SCAN ACTIVE TAB FEED';
+  function resetBtn() {
+    btnScanText.textContent = '⚡ Scan This Page';
     btnScan.disabled = false;
   }
 
-  function renderShapFeatures(features) {
+  function renderShap(features) {
     if (!features || typeof features !== 'object') {
       shapContainer.style.display = 'none';
       return;
     }
-
     const entries = Object.entries(features)
       .sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]))
       .slice(0, 4);
 
-    if (entries.length === 0) {
-      shapContainer.style.display = 'none';
-      return;
-    }
+    if (!entries.length) { shapContainer.style.display = 'none'; return; }
 
-    const maxAbs = Math.max(...entries.map(([, v]) => Math.abs(v))) || 1;
+    const maxVal = Math.max(...entries.map(([, v]) => Math.abs(v))) || 1;
     shapList.innerHTML = '';
-
     entries.forEach(([name, value]) => {
-      const pctBar = Math.min((Math.abs(value) / maxAbs) * 100, 100);
+      const pct = Math.min((Math.abs(value) / maxVal) * 100, 100);
       const isRisk = value > 0;
       const row = document.createElement('div');
-      row.className = 'feature-item';
+      row.className = 'feat-row';
       row.innerHTML = `
-        <div class="feature-name" title="${escHtml(name)}">${escHtml(name.replace(/_/g, ' '))}</div>
-        <div class="feature-bar-wrap">
-          <div class="feature-bar-fill ${isRisk ? 'positive' : 'negative'}" style="width: ${pctBar.toFixed(1)}%;"></div>
+        <span class="feat-name" title="${esc(name)}">${esc(name.replace(/_/g,' '))}</span>
+        <div class="feat-bar-bg">
+          <div class="feat-bar-fill ${isRisk ? 'fill-risk' : 'fill-safe'}" style="width:${pct.toFixed(1)}%"></div>
         </div>
-        <span class="feature-value ${isRisk ? 'text-red' : 'text-green'}">
-          ${isRisk ? '+' : ''}${Number(value).toFixed(2)}
-        </span>
+        <span class="feat-val ${isRisk ? 'text-red' : 'text-green'}">${isRisk ? '+' : ''}${value.toFixed(2)}</span>
       `;
       shapList.appendChild(row);
     });
-
     shapContainer.style.display = 'block';
   }
 
   function applyResult(result) {
-    resetScanButton();
+    resetBtn();
     if (!result) return;
 
     const isPhishing = result.prediction === 'phishing';
-    const score = typeof result.risk_score === 'number' 
-      ? result.risk_score 
-      : Math.round((result.confidence || 0) * 100);
 
-    // Primary Verdict Card
-    riskScoreText.textContent = score.toFixed(1);
-    scoreBar.style.width = Math.min(score, 100) + '%';
+    // ── Compute clean, sensible numbers ──────────────────────────────────────
+
+    // Risk score: use risk_score from API (0-100), fall back to confidence*100
+    let riskScore = typeof result.risk_score === 'number'
+      ? Math.round(result.risk_score * 10) / 10   // one decimal
+      : Math.round((result.confidence || 0) * 100);
+    riskScore = Math.min(Math.max(riskScore, 0), 100);
+
+    // ML confidence as % (0-100)
+    const mlPct = Math.round((result.confidence || 0) * 100);
+
+    // Threat intelligence score (0-100 integer from API or 0 fallback)
+    const threatScore = typeof result.threat_intel?.threat_score === 'number'
+      ? result.threat_intel.threat_score
+      : (isPhishing ? 70 : 0);
+
+    // ── Primary verdict display ───────────────────────────────────────────────
+    riskScoreEl.textContent = riskScore.toFixed(0);
+    scoreBar.style.width = riskScore + '%';
 
     if (isPhishing) {
-      statusBadge.className = 'neo-badge neo-badge-phishing';
-      statusBadge.textContent = 'THREAT DETECTED';
-      verdictText.className = 'neo-badge neo-badge-phishing';
-      verdictText.textContent = 'PHISHING // HIGH RISK';
-      verdictCard.className = 'verdict-card phishing';
-      scoreBar.style.background = 'var(--accent-red)';
-      riskScoreText.style.color = 'var(--accent-red)';
+      setBadge(statusBadge, 'badge-threat', 'Threat Detected');
+      setBadge(verdictBadge, 'badge-threat', 'Phishing');
+      scoreBar.style.background = 'var(--red)';
+      riskScoreEl.style.color   = 'var(--red)';
+      verdictCard.style.borderColor = 'rgba(240,64,96,0.4)';
     } else {
-      statusBadge.className = 'neo-badge neo-badge-safe';
-      statusBadge.textContent = 'VERIFIED SAFE';
-      verdictText.className = 'neo-badge neo-badge-safe';
-      verdictText.textContent = 'LEGITIMATE // CLEAN';
-      verdictCard.className = 'verdict-card safe';
-      scoreBar.style.background = 'var(--accent-green)';
-      riskScoreText.style.color = 'var(--accent-green)';
+      setBadge(statusBadge, 'badge-safe', 'Safe');
+      setBadge(verdictBadge, 'badge-safe', 'Legitimate');
+      scoreBar.style.background = 'var(--green)';
+      riskScoreEl.style.color   = 'var(--green)';
+      verdictCard.style.borderColor = 'rgba(62,207,122,0.35)';
     }
 
-    // Sub-Intelligence Pillar 1: ML Lexical Engine
-    const mlScoreVal = Math.round((result.confidence || 0) * 100);
-    subMlScore.textContent = `${mlScoreVal} / 100`;
-    if (mlScoreVal > 70) {
-      subMlTag.className = 'pillar-tag neo-badge-phishing';
-      subMlTag.textContent = 'ANOMALOUS';
+    // ── Pillar 1: ML Confidence ───────────────────────────────────────────────
+    subMlScore.textContent = mlPct + '%';
+    if (mlPct >= 70 && isPhishing) {
+      setBadge(subMlTag, 'badge-threat', 'Anomalous');
+    } else if (mlPct >= 70) {
+      setBadge(subMlTag, 'badge-warn', 'Borderline');
     } else {
-      subMlTag.className = 'pillar-tag neo-badge-safe';
-      subMlTag.textContent = 'NORMAL';
+      setBadge(subMlTag, 'badge-safe', 'Normal');
     }
 
-    // Sub-Intelligence Pillar 2: Threat Feeds
-    const threatScore = result.threat_intel?.threat_score || (isPhishing ? 88 : 0);
-    subFeedScore.textContent = `${threatScore} / 100`;
-    if (threatScore > 50 || result.threat_intel?.is_known_phishing) {
-      subFeedTag.className = 'pillar-tag neo-badge-phishing';
-      subFeedTag.textContent = result.threat_intel?.threat_level?.toUpperCase() || 'CRITICAL';
+    // ── Pillar 2: Threat Intelligence Feeds ──────────────────────────────────
+    subFeedScore.textContent = threatScore + ' / 100';
+    const isKnownPhish = result.threat_intel?.is_known_phishing === true;
+    if (isKnownPhish || threatScore >= 70) {
+      const level = result.threat_intel?.threat_level || 'critical';
+      setBadge(subFeedTag, 'badge-threat', level.charAt(0).toUpperCase() + level.slice(1));
+    } else if (threatScore >= 30) {
+      setBadge(subFeedTag, 'badge-warn', 'Suspicious');
     } else {
-      subFeedTag.className = 'pillar-tag neo-badge-safe';
-      subFeedTag.textContent = 'FEEDS CLEAN';
+      setBadge(subFeedTag, 'badge-safe', 'Clean');
     }
 
-    // Sub-Intelligence Pillar 3: TLS / Infrastructure
+    // ── Pillar 3: TLS / Protocol ──────────────────────────────────────────────
     const isHttps = currentTabUrl.startsWith('https://');
-    if (isHttps) {
-      subTlsVal.textContent = 'TLS 1.3 / HTTPS';
-      subTlsTag.className = 'pillar-tag neo-badge-safe';
-      subTlsTag.textContent = 'ENCRYPTED';
-    } else {
-      subTlsVal.textContent = 'RAW INSECURE HTTP';
-      subTlsTag.className = 'pillar-tag neo-badge-phishing';
-      subTlsTag.textContent = 'UNENCRYPTED';
-    }
+    subTlsVal.textContent = isHttps ? 'HTTPS / TLS' : 'HTTP (Unencrypted)';
+    setBadge(subTlsTag, isHttps ? 'badge-safe' : 'badge-threat', isHttps ? 'Encrypted' : 'Insecure');
 
-    // Sub-Intelligence Pillar 4: Domain Reputation
+    // ── Pillar 4: Domain Age ──────────────────────────────────────────────────
     const ageDays = result.threat_intel?.domain_age_days;
-    if (ageDays !== undefined && ageDays !== null) {
-      subDomainVal.textContent = `${ageDays} DAYS`;
-      if (ageDays < 30) {
-        subDomainTag.className = 'pillar-tag neo-badge-phishing';
-        subDomainTag.textContent = 'NEW DOMAIN';
-      } else {
-        subDomainTag.className = 'pillar-tag neo-badge-cyan';
-        subDomainTag.textContent = 'ESTABLISHED';
-      }
+    if (typeof ageDays === 'number' && ageDays >= 0) {
+      subDomainVal.textContent = ageDays >= 365
+        ? Math.floor(ageDays / 365) + ' yr' + (Math.floor(ageDays / 365) > 1 ? 's' : '')
+        : ageDays + ' days';
+      if (ageDays < 14)       setBadge(subDomainTag, 'badge-threat', 'Brand New');
+      else if (ageDays < 60)  setBadge(subDomainTag, 'badge-warn',   'Recent');
+      else                    setBadge(subDomainTag, 'badge-safe',   'Established');
     } else {
-      subDomainVal.textContent = isPhishing ? 'FLAGGED // NEW' : 'ESTABLISHED';
-      subDomainTag.className = isPhishing ? 'pillar-tag neo-badge-yellow' : 'pillar-tag neo-badge-cyan';
-      subDomainTag.textContent = isPhishing ? 'SUSPICIOUS' : 'TRUSTED';
+      subDomainVal.textContent = isPhishing ? 'Unknown' : 'Established';
+      setBadge(subDomainTag, isPhishing ? 'badge-warn' : 'badge-safe', isPhishing ? 'Unknown' : 'Trusted');
     }
 
-    // Sub-Intelligence Pillar 5: SHAP Feature Attribution
+    // ── SHAP feature attribution ──────────────────────────────────────────────
     let shapFeatures = result.shap_features;
     if (!shapFeatures && Array.isArray(result.shap_explanations)) {
       shapFeatures = {};
-      result.shap_explanations.forEach((item) => {
+      result.shap_explanations.forEach(item => {
         shapFeatures[item.feature] = item.shap_value;
       });
     }
-    renderShapFeatures(shapFeatures);
+    renderShap(shapFeatures);
 
-    // Sub-Intelligence Pillar 6: Blockchain Notarization
-    if (result.blockchain_block) {
-      chainBlockNum.textContent = `BLOCK #${result.blockchain_block.index}`;
-    } else if (result.blockchain) {
-      chainBlockNum.textContent = `BLOCK #${result.blockchain.block_index}`;
-    } else {
-      chainBlockNum.textContent = `BLOCK #--`;
-    }
+    // ── Blockchain block ──────────────────────────────────────────────────────
+    const blockIdx = result.blockchain_block?.index ?? result.blockchain?.block_index;
+    chainBlockNum.textContent = typeof blockIdx === 'number' ? `Block #${blockIdx}` : 'Block #—';
   }
 
   function displayUrl(url) {
     try {
-      const parsed = new URL(url);
-      urlScheme.textContent = parsed.protocol.toUpperCase() + '//';
-      urlDisplay.textContent = parsed.host + (parsed.pathname !== '/' ? parsed.pathname.slice(0, 30) : '');
+      const p = new URL(url);
+      urlScheme.textContent = p.protocol + '//';
+      urlDisplay.textContent = p.host + (p.pathname !== '/' ? p.pathname.slice(0, 28) : '');
     } catch (_) {
-      urlScheme.textContent = 'URL: ';
-      urlDisplay.textContent = url.slice(0, 35);
+      urlScheme.textContent = '';
+      urlDisplay.textContent = url.slice(0, 38);
     }
   }
 
-  function scanCurrentUrl() {
+  function scanCurrent() {
     if (!currentTabUrl) return;
-    setScanningState();
-
-    chrome.runtime.sendMessage({ type: 'SCAN_URL', url: currentTabUrl }, (response) => {
-      if (response && response.success && response.result) {
-        applyResult(response.result);
+    setScanning();
+    chrome.runtime.sendMessage({ type: 'SCAN_URL', url: currentTabUrl }, (resp) => {
+      if (resp && resp.success && resp.result) {
+        applyResult(resp.result);
       } else {
-        resetScanButton();
-        statusBadge.className = 'neo-badge neo-badge-yellow';
-        statusBadge.textContent = 'OFFLINE MODE';
+        resetBtn();
+        setBadge(statusBadge, 'badge-dim', 'Backend Offline');
       }
     });
   }
 
   function init() {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      if (!tabs || tabs.length === 0) return;
-      const tab = tabs[0];
-      currentTabUrl = tab.url || '';
-
+      if (!tabs || !tabs.length) return;
+      currentTabUrl = tabs[0].url || '';
       displayUrl(currentTabUrl);
 
-      // Check for cached result first
-      chrome.runtime.sendMessage({ type: 'GET_CACHED_RESULT', url: currentTabUrl }, (response) => {
-        if (response && response.result) {
-          applyResult(response.result);
+      chrome.runtime.sendMessage({ type: 'GET_CACHED_RESULT', url: currentTabUrl }, (resp) => {
+        if (resp && resp.result) {
+          applyResult(resp.result);
         } else {
-          // Auto scan if not yet cached
-          scanCurrentUrl();
+          scanCurrent();
         }
       });
     });
 
-    // Fetch daily stats
     chrome.runtime.sendMessage({ type: 'GET_STATS' }, (stats) => {
-      if (stats) {
-        statScans.textContent = stats.scansToday || 0;
-        statThreats.textContent = stats.threatsToday || 0;
-      }
+      if (!stats) return;
+      statScans.textContent   = stats.scansToday   || 0;
+      statThreats.textContent = stats.threatsToday || 0;
     });
 
-    btnScan.addEventListener('click', scanCurrentUrl);
+    btnScan.addEventListener('click', scanCurrent);
   }
 
   document.addEventListener('DOMContentLoaded', init);

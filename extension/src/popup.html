@@ -3,390 +3,251 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>VYRA // PHISHING GUARD</title>
+  <title>VYRA // Phishing Guard</title>
   <link rel="stylesheet" href="styles.css" />
   <style>
     html, body {
-      width: 400px;
-      min-height: 580px;
+      width: 370px;
+      min-height: 520px;
       margin: 0;
       padding: 0;
-      background: var(--bg-canvas);
-      color: #ffffff;
-      font-family: var(--font-mono);
-      overflow-x: hidden;
     }
 
-    .wrap {
-      padding: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
+    .wrap { padding: 10px; display: flex; flex-direction: column; gap: 8px; }
 
-    /* Top Banner */
-    .top-banner {
+    /* Header */
+    .header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 10px 12px;
-      background: var(--bg-card);
-      border: 2px solid #ffffff;
-      box-shadow: 3px 3px 0px 0px #ffffff;
+      padding: 8px 12px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
     }
+    .brand { display: flex; align-items: center; gap: 8px; }
+    .brand-name { font-size: 15px; font-weight: 800; color: var(--text); letter-spacing: 0.03em; }
+    .brand-sub  { font-size: 9px; color: var(--muted); margin-top: 1px; }
 
-    .brand-title {
-      font-size: 14px;
-      font-weight: 900;
-      letter-spacing: 0.05em;
-      color: #ffffff;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .brand-sub {
-      font-size: 9px;
-      color: var(--accent-yellow);
-      font-weight: 700;
-    }
-
-    /* URL Chip */
-    .url-bar {
-      padding: 8px 10px;
-      background: #000000;
-      border: 2px solid #ffffff;
-      box-shadow: 2px 2px 0px 0px #ffffff;
+    /* URL chip */
+    .url-chip {
+      padding: 7px 12px;
+      background: var(--sub);
+      border: 1px solid var(--border);
+      border-radius: 8px;
       font-size: 11px;
-      word-break: break-all;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
+      overflow: hidden;
     }
+    .url-scheme { color: var(--cyan); flex-shrink: 0; font-size: 11px; }
+    .url-host   { color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-    .url-scheme {
-      color: var(--accent-cyan);
-      font-weight: 900;
-      flex-shrink: 0;
-    }
-
-    .url-text {
-      color: #ffffff;
-      font-weight: 700;
-    }
-
-    /* Primary Score Card */
+    /* Verdict Card */
     .verdict-card {
       padding: 14px;
-      background: var(--bg-card);
-      border: 2px solid #ffffff;
-      box-shadow: 4px 4px 0px 0px var(--accent-yellow);
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      transition: box-shadow 0.2s ease;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
     }
-
-    .verdict-card.phishing {
-      box-shadow: 4px 4px 0px 0px var(--accent-red);
-    }
-
-    .verdict-card.safe {
-      box-shadow: 4px 4px 0px 0px var(--accent-green);
-    }
-
-    .verdict-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .verdict-label {
-      font-size: 11px;
-      font-weight: 900;
-      letter-spacing: 0.05em;
-      color: #a1a1aa;
-    }
-
-    .score-display {
-      display: flex;
-      align-items: baseline;
-      gap: 6px;
-    }
-
-    .score-number {
-      font-size: 32px;
-      font-weight: 900;
-      color: var(--accent-yellow);
-      line-height: 1;
-    }
-
-    .score-max {
-      font-size: 14px;
-      font-weight: 700;
-      color: #71717a;
-    }
-
-    .score-bar-track {
-      width: 100%;
-      height: 12px;
-      background: #000000;
-      border: 2px solid #ffffff;
-      position: relative;
-    }
-
-    .score-bar-fill {
-      height: 100%;
-      background: var(--accent-yellow);
-      width: 0%;
-      transition: width 0.4s ease, background 0.4s ease;
-    }
-
-    /* Sub-Intelligence Pillars */
-    .section-title {
-      font-size: 11px;
-      font-weight: 900;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: #ffffff;
+    .verdict-top {
       display: flex;
       align-items: center;
-      gap: 6px;
-      margin-top: 2px;
+      justify-content: space-between;
+      margin-bottom: 10px;
     }
+    .verdict-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em; }
+    .score-row { display: flex; align-items: baseline; gap: 4px; margin-bottom: 8px; }
+    .score-num { font-size: 36px; font-weight: 800; line-height: 1; color: var(--yellow); }
+    .score-of  { font-size: 13px; color: var(--dim); }
 
-    .pillars-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
-
-    .pillar-card {
-      padding: 8px;
-      background: var(--bg-card);
-      border: 2px solid #ffffff;
-      box-shadow: 2px 2px 0px 0px #ffffff;
+    /* Pillars grid */
+    .pillars { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+    .pillar {
+      padding: 9px 10px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      gap: 6px;
+      gap: 4px;
     }
+    .pillar-label { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+    .pillar-val   { font-size: 14px; font-weight: 800; color: var(--text); }
+    .pillar-sub   { font-size: 10px; color: var(--dim); }
 
-    .pillar-name {
-      font-size: 9px;
-      font-weight: 900;
-      text-transform: uppercase;
-      color: #a1a1aa;
-    }
-
-    .pillar-val {
-      font-size: 12px;
-      font-weight: 900;
-      color: #ffffff;
-    }
-
-    .pillar-tag {
-      font-size: 9px;
-      font-weight: 900;
-      padding: 2px 4px;
-      border: 1px solid #ffffff;
-      display: inline-block;
-      text-align: center;
-    }
-
-    /* SHAP Mini Container */
+    /* SHAP box */
     .shap-box {
-      padding: 10px;
-      background: var(--bg-card);
-      border: 2px solid #ffffff;
-      box-shadow: 3px 3px 0px 0px var(--accent-cyan);
+      padding: 10px 12px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
     }
-
     .shap-title {
       font-size: 10px;
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--accent-cyan);
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    /* Blockchain Card */
-    .chain-card {
-      padding: 8px 10px;
-      background: var(--bg-card);
-      border: 2px solid #ffffff;
-      box-shadow: 2px 2px 0px 0px var(--accent-purple);
-      font-size: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    /* Scan Action Button */
-    .scan-btn {
-      width: 100%;
-      padding: 12px;
-      background: var(--accent-yellow);
-      color: #000000;
-      font-family: var(--font-mono);
-      font-size: 13px;
-      font-weight: 900;
       text-transform: uppercase;
       letter-spacing: 0.06em;
-      border: 2px solid #ffffff;
-      box-shadow: 4px 4px 0px 0px #ffffff;
-      cursor: pointer;
+      color: var(--cyan);
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* Chain row */
+    .chain-row {
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 8px;
+      justify-content: space-between;
+      padding: 8px 12px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 11px;
     }
+    .chain-label { color: var(--muted); }
+    .chain-val   { color: var(--purple); font-weight: 700; }
 
-    .scan-btn:hover {
-      background: #ffffff;
+    /* Scan button */
+    .scan-btn {
+      width: 100%;
+      padding: 11px;
+      background: rgba(245,197,66,0.12);
+      color: var(--yellow);
+      border: 1px solid rgba(245,197,66,0.4);
+      border-radius: 8px;
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
     }
-
-    .scan-btn:active {
-      transform: translate(2px, 2px);
-      box-shadow: 2px 2px 0px 0px #ffffff;
+    .scan-btn:hover:not(:disabled) {
+      background: rgba(245,197,66,0.22);
+      border-color: rgba(245,197,66,0.7);
     }
+    .scan-btn:disabled { opacity: 0.45; cursor: not-allowed; }
 
-    /* Footer Telemetry */
-    .footer-bar {
+    /* Footer */
+    .footer {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding-top: 4px;
+      padding: 2px 2px 0;
       font-size: 10px;
-      color: #a1a1aa;
     }
-
+    .footer-stats { color: var(--muted); }
+    .footer-stats strong { color: var(--text); }
     .dash-link {
-      color: var(--accent-yellow);
+      color: var(--cyan);
       text-decoration: none;
-      font-weight: 900;
-      border-bottom: 1.5px solid var(--accent-yellow);
+      font-size: 10px;
+      font-weight: 700;
     }
-
-    .dash-link:hover {
-      color: #ffffff;
-      border-color: #ffffff;
-    }
+    .dash-link:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
-  <div class="wrap">
+<div class="wrap">
 
-    <!-- Top Banner -->
-    <div class="top-banner">
+  <!-- Header -->
+  <div class="header">
+    <div class="brand">
+      <svg width="22" height="22" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M18 2L4 8v10c0 9 6 16 14 18 8-2 14-9 14-18V8L18 2z" fill="url(#vg)"/>
+        <path d="M13 18l4 4 7-7" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+        <defs>
+          <linearGradient id="vg" x1="4" y1="2" x2="32" y2="36" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#4db8e8"/>
+            <stop offset="100%" stop-color="#b07ef0"/>
+          </linearGradient>
+        </defs>
+      </svg>
       <div>
-        <div class="brand-title">
-          <span>⚡ VYRA</span>
-          <span class="brand-sub">GUARD // V1.0</span>
-        </div>
-      </div>
-      <div id="status-badge" class="neo-badge neo-badge-yellow">STANDBY</div>
-    </div>
-
-    <!-- Target URL Bar -->
-    <div class="url-bar">
-      <span class="url-scheme" id="url-scheme">HTTP://</span>
-      <span class="url-text" id="url-display">RESOLVING ACTIVE TAB...</span>
-    </div>
-
-    <!-- Primary Verdict Card -->
-    <div class="verdict-card" id="verdict-card">
-      <div class="verdict-header">
-        <span class="verdict-label">COMPREHENSIVE RISK INDEX</span>
-        <span id="verdict-text" class="neo-badge neo-badge-safe">ANALYZING</span>
-      </div>
-      <div class="score-display">
-        <span class="score-number" id="risk-score">--</span>
-        <span class="score-max">/ 100</span>
-      </div>
-      <div class="score-bar-track">
-        <div class="score-bar-fill" id="score-bar"></div>
+        <div class="brand-name">VYRA</div>
+        <div class="brand-sub">Phishing Guard</div>
       </div>
     </div>
-
-    <!-- Sub-Intelligence Score Pillars -->
-    <div class="section-title">
-      <span>SUB-INTELLIGENCE BREAKDOWN</span>
-    </div>
-
-    <div class="pillars-grid">
-      <!-- Pillar 1: Lexical ML Engine -->
-      <div class="pillar-card">
-        <div class="pillar-name">1. ML 35-D LEXICAL</div>
-        <div class="pillar-val" id="sub-ml-score">-- / 100</div>
-        <div>
-          <span class="pillar-tag neo-badge-yellow" id="sub-ml-tag">READY</span>
-        </div>
-      </div>
-
-      <!-- Pillar 2: Threat Intelligence Feeds -->
-      <div class="pillar-card">
-        <div class="pillar-name">2. THREAT REPUTATION</div>
-        <div class="pillar-val" id="sub-feed-score">0 / 100</div>
-        <div>
-          <span class="pillar-tag neo-badge-safe" id="sub-feed-tag">CLEAN</span>
-        </div>
-      </div>
-
-      <!-- Pillar 3: TLS / Infrastructure -->
-      <div class="pillar-card">
-        <div class="pillar-name">3. CRYPTO / TLS TRUST</div>
-        <div class="pillar-val" id="sub-tls-val">RESOLVING...</div>
-        <div>
-          <span class="pillar-tag neo-badge-safe" id="sub-tls-tag">CHECKING</span>
-        </div>
-      </div>
-
-      <!-- Pillar 4: Domain Age & Entropy -->
-      <div class="pillar-card">
-        <div class="pillar-name">4. DOMAIN REPUTATION</div>
-        <div class="pillar-val" id="sub-domain-val">-- DAYS</div>
-        <div>
-          <span class="pillar-tag neo-badge-cyan" id="sub-domain-tag">WHOIS</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Pillar 5: SHAP Feature Attribution -->
-    <div class="shap-box" id="shap-container" style="display:none;">
-      <div class="shap-title">
-        <span>TOP XAI FEATURE CONTRIBUTORS</span>
-        <span style="color:#ffffff;">TREE-SHAP</span>
-      </div>
-      <div id="shap-mini-list"></div>
-    </div>
-
-    <!-- Pillar 6: Blockchain Notarization -->
-    <div class="chain-card" id="chain-card">
-      <div>
-        <span style="color:var(--accent-purple); font-weight:900;">POW LEDGER:</span>
-        <span id="chain-block-num" style="font-weight:900;">BLOCK #--</span>
-      </div>
-      <div id="chain-status-tag" class="neo-badge neo-badge-purple">NOTARIZED</div>
-    </div>
-
-    <!-- Scan Button -->
-    <button class="scan-btn" id="btn-scan">
-      <span id="btn-scan-text">⚡ SCAN ACTIVE TAB FEED</span>
-    </button>
-
-    <!-- Footer Telemetry -->
-    <div class="footer-bar">
-      <span>TODAY: <strong id="stat-scans" style="color:#ffffff;">0</strong> SCANS | <strong id="stat-threats" style="color:var(--accent-red);">0</strong> BLOCKED</span>
-      <a class="dash-link" href="http://localhost:3000" target="_blank">DASHBOARD ↗</a>
-    </div>
-
+    <span id="status-badge" class="badge badge-dim">READY</span>
   </div>
 
-  <script src="popup.js"></script>
+  <!-- URL chip -->
+  <div class="url-chip">
+    <span class="url-scheme" id="url-scheme">https://</span>
+    <span class="url-host" id="url-display">Loading tab…</span>
+  </div>
+
+  <!-- Verdict card -->
+  <div class="verdict-card" id="verdict-card">
+    <div class="verdict-top">
+      <span class="verdict-label">Risk Score</span>
+      <span id="verdict-badge" class="badge badge-dim">—</span>
+    </div>
+    <div class="score-row">
+      <span class="score-num" id="risk-score">—</span>
+      <span class="score-of">/ 100</span>
+    </div>
+    <div class="score-track">
+      <div class="score-fill" id="score-bar" style="width:0%"></div>
+    </div>
+  </div>
+
+  <!-- Sub-intelligence pillars -->
+  <div class="pillars">
+    <div class="pillar">
+      <span class="pillar-label">ML Confidence</span>
+      <span class="pillar-val" id="sub-ml-score">—</span>
+      <span id="sub-ml-tag" class="badge badge-dim" style="align-self:flex-start">—</span>
+    </div>
+    <div class="pillar">
+      <span class="pillar-label">Threat Feeds</span>
+      <span class="pillar-val" id="sub-feed-score">—</span>
+      <span id="sub-feed-tag" class="badge badge-dim" style="align-self:flex-start">—</span>
+    </div>
+    <div class="pillar">
+      <span class="pillar-label">TLS / Protocol</span>
+      <span class="pillar-val" id="sub-tls-val" style="font-size:11px">—</span>
+      <span id="sub-tls-tag" class="badge badge-dim" style="align-self:flex-start">—</span>
+    </div>
+    <div class="pillar">
+      <span class="pillar-label">Domain Age</span>
+      <span class="pillar-val" id="sub-domain-val" style="font-size:12px">—</span>
+      <span id="sub-domain-tag" class="badge badge-dim" style="align-self:flex-start">—</span>
+    </div>
+  </div>
+
+  <!-- SHAP features -->
+  <div class="shap-box" id="shap-container" style="display:none">
+    <div class="shap-title">
+      <span>Key Risk Factors (SHAP)</span>
+      <span class="text-muted">XAI</span>
+    </div>
+    <div id="shap-mini-list"></div>
+  </div>
+
+  <!-- Blockchain notarization -->
+  <div class="chain-row">
+    <span class="chain-label">Blockchain audit</span>
+    <span class="chain-val" id="chain-block-num">Block #—</span>
+  </div>
+
+  <!-- Scan button -->
+  <button class="scan-btn" id="btn-scan">
+    <span id="btn-scan-text">⚡ Scan This Page</span>
+  </button>
+
+  <!-- Footer stats -->
+  <div class="footer">
+    <span class="footer-stats">
+      Today: <strong id="stat-scans">0</strong> scans &nbsp;·&nbsp;
+      <strong id="stat-threats" style="color:var(--red)">0</strong> blocked
+    </span>
+    <a class="dash-link" href="http://localhost:3000" target="_blank">Dashboard ↗</a>
+  </div>
+
+</div>
+<script src="popup.js"></script>
 </body>
 </html>

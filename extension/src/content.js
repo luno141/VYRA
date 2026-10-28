@@ -116,6 +116,10 @@
   // ── Init ──────────────────────────────────────────────────────────────────
 
   function init() {
+    const host = window.location.hostname.toLowerCase();
+    if (host === 'localhost' || host === '127.0.0.1' || host === '0.0.0.0') {
+      return; // Do not inject badge or banners on local dashboard
+    }
     const currentUrl = window.location.href;
 
     // Ask background for cached scan result

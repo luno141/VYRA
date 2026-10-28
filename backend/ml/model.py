@@ -171,7 +171,9 @@ class PhishingDetector:
                     pred = self.model.predict(arr)[0]
                     phishing_prob = 1.0 if pred in (1, "phishing", True) else 0.0
 
-                is_phishing = phishing_prob >= 0.5
+                # Precision-tuned decision threshold (0.70) to prevent False Positives on benign complex URLs
+                OPERATIONAL_THRESHOLD = 0.70
+                is_phishing = phishing_prob >= OPERATIONAL_THRESHOLD
                 prediction = "phishing" if is_phishing else "legitimate"
                 confidence = round(phishing_prob if is_phishing else (1.0 - phishing_prob), 4)
                 risk_score = round(phishing_prob * 100.0, 2)
