@@ -18,8 +18,8 @@
     badge.id = BADGE_ID;
 
     const isPhishing = state === 'phishing';
-    const color      = isPhishing ? '#c0392b' : '#27ae60';
-    const label      = isPhishing ? 'VYRA ⚠ Flagged' : 'VYRA Protected';
+    const color      = isPhishing ? '#ff3366' : '#22c55e';
+    const label      = isPhishing ? '⚠ VYRA // THREAT' : '⚡ VYRA // PROTECTED';
 
     badge.style.cssText = `
       position: fixed;
@@ -29,28 +29,26 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      background: rgba(15,15,25,0.92);
-      border: 1px solid ${color};
-      border-radius: 20px;
-      padding: 5px 12px 5px 8px;
-      font-family: 'Segoe UI', Arial, sans-serif;
-      font-size: 11px;
-      font-weight: 600;
-      color: ${color};
+      background: #090a0f;
+      border: 2px solid #ffffff;
+      border-radius: 0px;
+      padding: 6px 12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 0.05em;
+      color: #ffffff;
       cursor: pointer;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.4);
-      backdrop-filter: blur(6px);
-      transition: opacity 0.3s;
+      box-shadow: 3px 3px 0px 0px ${color};
       user-select: none;
     `;
 
     const dot = document.createElement('span');
     dot.style.cssText = `
-      width: 8px; height: 8px;
-      border-radius: 50%;
+      width: 7px; height: 7px;
       background: ${color};
+      border: 1px solid #ffffff;
       display: inline-block;
-      box-shadow: 0 0 6px ${color};
     `;
 
     const text = document.createElement('span');

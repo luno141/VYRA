@@ -58,18 +58,15 @@ export default function ScanResult({ result }: ScanResultProps) {
     copyToClipboard(JSON.stringify(result, null, 2), 'json_report');
   };
 
-  // Extract all 35 features if present
   const featuresList = Object.entries(result.extracted_features || {}).filter(([key]) =>
     key.toLowerCase().includes(featureSearch.toLowerCase())
   );
 
   return (
     <div className="w-full space-y-8 animate-in fade-in duration-300">
-      {/* Top Verdict Banner (Ultra-High Contrast Dark Neo-Brutalist Layout) */}
       <div
         className={`relative overflow-hidden p-6 sm:p-8 border-[3px] border-white shadow-[8px_8px_0px_0px_#ffffff] bg-[#12141e] text-white`}
       >
-        {/* Top Hazard Accent Bar */}
         <div
           className={`absolute top-0 left-0 right-0 h-3 border-b-2 border-white ${
             isPhishing ? 'neo-hazard-red' : 'neo-hazard-green'
@@ -77,7 +74,6 @@ export default function ScanResult({ result }: ScanResultProps) {
         />
 
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 pt-3">
-          {/* Verdict Info */}
           <div className="flex items-start gap-4">
             <div
               className={`w-16 h-16 border-2 border-white flex items-center justify-center shrink-0 shadow-[4px_4px_0px_0px_#ffffff] ${
@@ -117,7 +113,6 @@ export default function ScanResult({ result }: ScanResultProps) {
                 )}
               </div>
 
-              {/* Bold High Contrast Heading */}
               <h2 className="text-3xl sm:text-5xl font-black font-mono tracking-tight leading-none uppercase">
                 {isPhishing ? (
                   <span className="text-[#ff3366] drop-shadow-[2px_2px_0px_#000]">
@@ -130,7 +125,6 @@ export default function ScanResult({ result }: ScanResultProps) {
                 )}
               </h2>
 
-              {/* Scanned URL display box */}
               <div className="mt-3 flex items-center gap-2 max-w-2xl bg-[#1a1d2e] text-white px-4 py-2.5 border-2 border-white text-xs font-mono font-bold shadow-[4px_4px_0px_0px_#facc15]">
                 <span className="text-[#facc15] shrink-0 select-none font-black">TARGET &gt;</span>
                 <span className="truncate select-all text-white font-mono">{result.url}</span>
@@ -145,7 +139,6 @@ export default function ScanResult({ result }: ScanResultProps) {
             </div>
           </div>
 
-          {/* Quick Metrics Badges */}
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 shrink-0">
             <div className="bg-[#1a1d2e] text-white p-3.5 border-2 border-white shadow-[4px_4px_0px_0px_#ffffff] text-center min-w-[120px]">
               <div className="text-[10px] uppercase font-mono font-black text-[#facc15]">CONFIDENCE</div>
@@ -163,7 +156,6 @@ export default function ScanResult({ result }: ScanResultProps) {
           </div>
         </div>
 
-        {/* Action Toolbar */}
         <div className="mt-6 pt-4 border-t-2 border-white flex flex-wrap items-center justify-between gap-3 text-xs font-mono font-black">
           <div className="flex items-center gap-2 flex-wrap">
             <button
@@ -207,7 +199,6 @@ export default function ScanResult({ result }: ScanResultProps) {
         </div>
       </div>
 
-      {/* 35-Dimensional Extracted Features Drawer */}
       {showFeatures && Object.keys(result.extracted_features || {}).length > 0 && (
         <div className="p-6 bg-[#12141e] border-[3px] border-white shadow-[6px_6px_0px_0px_#facc15] space-y-4 animate-in slide-in-from-top-4 duration-200">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b-2 border-white gap-2">
@@ -250,14 +241,10 @@ export default function ScanResult({ result }: ScanResultProps) {
         </div>
       )}
 
-      {/* Main Grid: Risk Meter + Threat Intelligence & SHAP Chart */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Left Column: Risk Meter and Threat Intelligence Card */}
         <div className="lg:col-span-5 space-y-8">
-          {/* Visual Risk Meter */}
           <RiskMeter score={result.risk_score} verdict={result.verdict} />
 
-          {/* Threat Intelligence Card (Ultra High Contrast Dark Container) */}
           <div className="p-6 bg-[#12141e] border-[3px] border-white shadow-[6px_6px_0px_0px_#38bdf8] space-y-4">
             <div className="flex items-center justify-between pb-3 border-b-2 border-white">
               <h3 className="text-sm font-black font-mono uppercase tracking-wider text-white flex items-center gap-2">

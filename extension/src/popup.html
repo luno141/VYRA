@@ -3,345 +3,390 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>VYRA Phishing Guard</title>
+  <title>VYRA // PHISHING GUARD</title>
   <link rel="stylesheet" href="styles.css" />
   <style>
     html, body {
-      width: 380px;
-      min-height: 520px;
+      width: 400px;
+      min-height: 580px;
+      margin: 0;
+      padding: 0;
+      background: var(--bg-canvas);
+      color: #ffffff;
+      font-family: var(--font-mono);
       overflow-x: hidden;
-      background: var(--bg-primary);
     }
 
-    /* ── Layout ── */
-    .popup-wrap {
+    .wrap {
+      padding: 12px;
       display: flex;
       flex-direction: column;
-      min-height: 520px;
-      padding: 0;
+      gap: 12px;
     }
 
-    /* ── Header ── */
-    .header {
+    /* Top Banner */
+    .top-banner {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 14px 18px 12px;
-      background: var(--bg-secondary);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 9px;
-    }
-
-    .brand-logo svg { display: block; }
-
-    .brand-name {
-      font-size: 17px;
-      font-weight: 900;
-      letter-spacing: -0.01em;
-      background: linear-gradient(90deg, #4f8ef7, #9b59b6);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .brand-tagline {
-      font-size: 10px;
-      color: var(--text-muted);
-      margin-top: -1px;
-    }
-
-    /* ── Status shield ── */
-    .status-wrap {
-      padding: 22px 18px 10px;
-      text-align: center;
-    }
-
-    .shield-big {
-      font-size: 62px;
-      line-height: 1;
-      transition: filter 0.4s;
-    }
-
-    .shield-big.safe     { filter: drop-shadow(0 0 18px rgba(39,174,96,0.7)); }
-    .shield-big.phishing { filter: drop-shadow(0 0 18px rgba(231,76,60,0.8)); animation: pulse-red 1.8s infinite; }
-    .shield-big.scanning { filter: drop-shadow(0 0 12px rgba(79,142,247,0.5)); animation: spin-subtle 2s linear infinite; }
-
-    @keyframes pulse-red {
-      0%,100% { filter: drop-shadow(0 0 18px rgba(231,76,60,0.8)); }
-      50%      { filter: drop-shadow(0 0 36px rgba(231,76,60,1.0)); }
-    }
-
-    @keyframes spin-subtle {
-      0%   { transform: rotate(0deg)   scale(1);    }
-      25%  { transform: rotate(3deg)   scale(1.03); }
-      75%  { transform: rotate(-3deg)  scale(0.97); }
-      100% { transform: rotate(0deg)   scale(1);    }
-    }
-
-    .status-label {
-      font-size: 18px;
-      font-weight: 800;
-      margin-top: 8px;
-      letter-spacing: -0.01em;
-    }
-
-    .status-label.safe     { color: var(--accent-green); }
-    .status-label.phishing { color: var(--accent-red);   }
-    .status-label.scanning { color: var(--accent-blue);  }
-    .status-label.unknown  { color: var(--text-secondary);}
-
-    /* ── URL chip ── */
-    .url-chip {
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      padding: 10px 12px;
       background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 8px 12px;
-      margin: 0 18px 14px;
-      font-family: var(--font-mono);
-      font-size: 11px;
-      color: var(--text-secondary);
-      word-break: break-all;
+      border: 2px solid #ffffff;
+      box-shadow: 3px 3px 0px 0px #ffffff;
     }
 
-    .url-scheme { color: var(--accent-blue); flex-shrink: 0; }
-
-    /* ── Body content ── */
-    .content { padding: 0 18px; flex: 1; }
-
-    /* ── Confidence row ── */
-    .conf-section { margin-bottom: 14px; }
-
-    .conf-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      margin-bottom: 5px;
-      font-size: 12px;
-    }
-
-    .conf-header-label { color: var(--text-muted); }
-    .conf-pct          { font-weight: 800; font-size: 16px; }
-    .conf-pct.danger   { color: var(--accent-red);   }
-    .conf-pct.safe     { color: var(--accent-green);  }
-
-    /* ── SHAP mini list ── */
-    .shap-mini-title {
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--text-muted);
-      margin: 14px 0 8px;
+    .brand-title {
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: 0.05em;
+      color: #ffffff;
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 6px;
     }
 
-    /* ── Stats row ── */
-    .stats-row {
+    .brand-sub {
+      font-size: 9px;
+      color: var(--accent-yellow);
+      font-weight: 700;
+    }
+
+    /* URL Chip */
+    .url-bar {
+      padding: 8px 10px;
+      background: #000000;
+      border: 2px solid #ffffff;
+      box-shadow: 2px 2px 0px 0px #ffffff;
+      font-size: 11px;
+      word-break: break-all;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .url-scheme {
+      color: var(--accent-cyan);
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+
+    .url-text {
+      color: #ffffff;
+      font-weight: 700;
+    }
+
+    /* Primary Score Card */
+    .verdict-card {
+      padding: 14px;
+      background: var(--bg-card);
+      border: 2px solid #ffffff;
+      box-shadow: 4px 4px 0px 0px var(--accent-yellow);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: box-shadow 0.2s ease;
+    }
+
+    .verdict-card.phishing {
+      box-shadow: 4px 4px 0px 0px var(--accent-red);
+    }
+
+    .verdict-card.safe {
+      box-shadow: 4px 4px 0px 0px var(--accent-green);
+    }
+
+    .verdict-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .verdict-label {
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.05em;
+      color: #a1a1aa;
+    }
+
+    .score-display {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+
+    .score-number {
+      font-size: 32px;
+      font-weight: 900;
+      color: var(--accent-yellow);
+      line-height: 1;
+    }
+
+    .score-max {
+      font-size: 14px;
+      font-weight: 700;
+      color: #71717a;
+    }
+
+    .score-bar-track {
+      width: 100%;
+      height: 12px;
+      background: #000000;
+      border: 2px solid #ffffff;
+      position: relative;
+    }
+
+    .score-bar-fill {
+      height: 100%;
+      background: var(--accent-yellow);
+      width: 0%;
+      transition: width 0.4s ease, background 0.4s ease;
+    }
+
+    /* Sub-Intelligence Pillars */
+    .section-title {
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 2px;
+    }
+
+    .pillars-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin: 14px 18px;
+      gap: 8px;
     }
 
-    .stat-card {
+    .pillar-card {
+      padding: 8px;
       background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 12px 14px;
+      border: 2px solid #ffffff;
+      box-shadow: 2px 2px 0px 0px #ffffff;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    .pillar-name {
+      font-size: 9px;
+      font-weight: 900;
+      text-transform: uppercase;
+      color: #a1a1aa;
+    }
+
+    .pillar-val {
+      font-size: 12px;
+      font-weight: 900;
+      color: #ffffff;
+    }
+
+    .pillar-tag {
+      font-size: 9px;
+      font-weight: 900;
+      padding: 2px 4px;
+      border: 1px solid #ffffff;
+      display: inline-block;
       text-align: center;
     }
 
-    .stat-value {
-      font-size: 26px;
-      font-weight: 900;
-      color: var(--text-primary);
-      line-height: 1;
+    /* SHAP Mini Container */
+    .shap-box {
+      padding: 10px;
+      background: var(--bg-card);
+      border: 2px solid #ffffff;
+      box-shadow: 3px 3px 0px 0px var(--accent-cyan);
     }
 
-    .stat-value.threat-color { color: var(--accent-red); }
-
-    .stat-label {
+    .shap-title {
       font-size: 10px;
-      color: var(--text-muted);
+      font-weight: 900;
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      margin-top: 4px;
+      color: var(--accent-cyan);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
 
-    /* ── Action buttons ── */
-    .action-area {
-      padding: 8px 18px 14px;
+    /* Blockchain Card */
+    .chain-card {
+      padding: 8px 10px;
+      background: var(--bg-card);
+      border: 2px solid #ffffff;
+      box-shadow: 2px 2px 0px 0px var(--accent-purple);
+      font-size: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
 
-    .btn-scan {
+    /* Scan Action Button */
+    .scan-btn {
       width: 100%;
-      padding: 11px;
-      font-size: 14px;
-      border-radius: 10px;
-      background: linear-gradient(135deg, #4f8ef7, #7b61ff);
-      color: #fff;
-      border: none;
+      padding: 12px;
+      background: var(--accent-yellow);
+      color: #000000;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      border: 2px solid #ffffff;
+      box-shadow: 4px 4px 0px 0px #ffffff;
       cursor: pointer;
-      font-weight: 700;
-      transition: filter 0.2s, transform 0.15s;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
     }
 
-    .btn-scan:hover   { filter: brightness(1.12); transform: translateY(-1px); }
-    .btn-scan:active  { filter: brightness(0.92); transform: translateY(0); }
-    .btn-scan:disabled{ opacity: 0.5; cursor: not-allowed; transform: none; }
+    .scan-btn:hover {
+      background: #ffffff;
+    }
 
-    /* ── Footer ── */
-    .popup-footer {
-      background: var(--bg-secondary);
-      border-top: 1px solid var(--border);
-      padding: 10px 18px;
+    .scan-btn:active {
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0px 0px #ffffff;
+    }
+
+    /* Footer Telemetry */
+    .footer-bar {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-    }
-
-    .footer-link {
-      font-size: 11px;
-      color: var(--accent-blue);
-      text-decoration: none;
-      display: flex;
       align-items: center;
-      gap: 4px;
+      padding-top: 4px;
+      font-size: 10px;
+      color: #a1a1aa;
     }
 
-    .footer-link:hover { text-decoration: underline; }
-
-    .footer-version { font-size: 10px; color: var(--text-muted); }
-
-    /* ── Spinner ── */
-    .spinner {
-      width: 16px; height: 16px;
-      border: 2px solid rgba(255,255,255,0.3);
-      border-top-color: #fff;
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-      display: none;
+    .dash-link {
+      color: var(--accent-yellow);
+      text-decoration: none;
+      font-weight: 900;
+      border-bottom: 1.5px solid var(--accent-yellow);
     }
 
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* ── Error notice ── */
-    .error-notice {
-      background: rgba(231,76,60,0.1);
-      border: 1px solid rgba(231,76,60,0.3);
-      border-radius: 8px;
-      padding: 10px 14px;
-      font-size: 12px;
-      color: var(--accent-red);
-      margin-bottom: 12px;
-      display: none;
+    .dash-link:hover {
+      color: #ffffff;
+      border-color: #ffffff;
     }
   </style>
 </head>
 <body>
-<div class="popup-wrap">
+  <div class="wrap">
 
-  <!-- ── Header ── -->
-  <div class="header">
-    <div class="brand">
-      <div class="brand-logo">
-        <svg width="28" height="28" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M18 2L4 8v10c0 9 6 16 14 18 8-2 14-9 14-18V8L18 2z" fill="url(#hg)"/>
-          <path d="M13 18l4 4 7-7" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/>
-          <defs>
-            <linearGradient id="hg" x1="4" y1="2" x2="32" y2="36" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stop-color="#4f8ef7"/>
-              <stop offset="100%" stop-color="#9b59b6"/>
-            </linearGradient>
-          </defs>
-        </svg>
-      </div>
+    <!-- Top Banner -->
+    <div class="top-banner">
       <div>
-        <div class="brand-name">VYRA</div>
-        <div class="brand-tagline">Phishing Guard</div>
+        <div class="brand-title">
+          <span>⚡ VYRA</span>
+          <span class="brand-sub">GUARD // V1.0</span>
+        </div>
       </div>
+      <div id="status-badge" class="neo-badge neo-badge-yellow">STANDBY</div>
     </div>
-    <div id="header-badge" class="badge badge-unknown">—</div>
-  </div>
 
-  <!-- ── Status shield ── -->
-  <div class="status-wrap">
-    <div class="shield-big unknown" id="status-icon">🛡️</div>
-    <div class="status-label unknown" id="status-text">Not scanned yet</div>
-  </div>
+    <!-- Target URL Bar -->
+    <div class="url-bar">
+      <span class="url-scheme" id="url-scheme">HTTP://</span>
+      <span class="url-text" id="url-display">RESOLVING ACTIVE TAB...</span>
+    </div>
 
-  <!-- ── URL chip ── -->
-  <div class="url-chip">
-    <span class="url-scheme" id="url-scheme">https://</span>
-    <span id="url-display">Loading…</span>
-  </div>
-
-  <!-- ── Main content ── -->
-  <div class="content">
-
-    <div class="error-notice" id="error-notice"></div>
-
-    <!-- Confidence (hidden until scanned) -->
-    <div class="conf-section" id="conf-section" style="display:none;">
-      <div class="conf-header">
-        <span class="conf-header-label">Confidence</span>
-        <span class="conf-pct" id="conf-pct">0%</span>
+    <!-- Primary Verdict Card -->
+    <div class="verdict-card" id="verdict-card">
+      <div class="verdict-header">
+        <span class="verdict-label">COMPREHENSIVE RISK INDEX</span>
+        <span id="verdict-text" class="neo-badge neo-badge-safe">ANALYZING</span>
       </div>
-      <div class="progress-track">
-        <div class="progress-fill" id="conf-fill" style="width:0%;"></div>
+      <div class="score-display">
+        <span class="score-number" id="risk-score">--</span>
+        <span class="score-max">/ 100</span>
+      </div>
+      <div class="score-bar-track">
+        <div class="score-bar-fill" id="score-bar"></div>
       </div>
     </div>
 
-    <!-- SHAP mini features -->
-    <div id="shap-mini" style="display:none;">
-      <div class="shap-mini-title">🔍 Top Risk Factors</div>
-      <ul class="feature-list" id="shap-mini-list"></ul>
+    <!-- Sub-Intelligence Score Pillars -->
+    <div class="section-title">
+      <span>SUB-INTELLIGENCE BREAKDOWN</span>
     </div>
 
-  </div>
+    <div class="pillars-grid">
+      <!-- Pillar 1: Lexical ML Engine -->
+      <div class="pillar-card">
+        <div class="pillar-name">1. ML 35-D LEXICAL</div>
+        <div class="pillar-val" id="sub-ml-score">-- / 100</div>
+        <div>
+          <span class="pillar-tag neo-badge-yellow" id="sub-ml-tag">READY</span>
+        </div>
+      </div>
 
-  <!-- ── Scan button ── -->
-  <div class="action-area">
-    <button class="btn-scan" id="btn-scan">
-      <div class="spinner" id="scan-spinner"></div>
-      <span id="btn-scan-text">🔍 Scan Current Tab</span>
+      <!-- Pillar 2: Threat Intelligence Feeds -->
+      <div class="pillar-card">
+        <div class="pillar-name">2. THREAT REPUTATION</div>
+        <div class="pillar-val" id="sub-feed-score">0 / 100</div>
+        <div>
+          <span class="pillar-tag neo-badge-safe" id="sub-feed-tag">CLEAN</span>
+        </div>
+      </div>
+
+      <!-- Pillar 3: TLS / Infrastructure -->
+      <div class="pillar-card">
+        <div class="pillar-name">3. CRYPTO / TLS TRUST</div>
+        <div class="pillar-val" id="sub-tls-val">RESOLVING...</div>
+        <div>
+          <span class="pillar-tag neo-badge-safe" id="sub-tls-tag">CHECKING</span>
+        </div>
+      </div>
+
+      <!-- Pillar 4: Domain Age & Entropy -->
+      <div class="pillar-card">
+        <div class="pillar-name">4. DOMAIN REPUTATION</div>
+        <div class="pillar-val" id="sub-domain-val">-- DAYS</div>
+        <div>
+          <span class="pillar-tag neo-badge-cyan" id="sub-domain-tag">WHOIS</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pillar 5: SHAP Feature Attribution -->
+    <div class="shap-box" id="shap-container" style="display:none;">
+      <div class="shap-title">
+        <span>TOP XAI FEATURE CONTRIBUTORS</span>
+        <span style="color:#ffffff;">TREE-SHAP</span>
+      </div>
+      <div id="shap-mini-list"></div>
+    </div>
+
+    <!-- Pillar 6: Blockchain Notarization -->
+    <div class="chain-card" id="chain-card">
+      <div>
+        <span style="color:var(--accent-purple); font-weight:900;">POW LEDGER:</span>
+        <span id="chain-block-num" style="font-weight:900;">BLOCK #--</span>
+      </div>
+      <div id="chain-status-tag" class="neo-badge neo-badge-purple">NOTARIZED</div>
+    </div>
+
+    <!-- Scan Button -->
+    <button class="scan-btn" id="btn-scan">
+      <span id="btn-scan-text">⚡ SCAN ACTIVE TAB FEED</span>
     </button>
-  </div>
 
-  <!-- ── Stats ── -->
-  <div class="stats-row">
-    <div class="stat-card">
-      <div class="stat-value" id="stat-scans">—</div>
-      <div class="stat-label">Scans Today</div>
+    <!-- Footer Telemetry -->
+    <div class="footer-bar">
+      <span>TODAY: <strong id="stat-scans" style="color:#ffffff;">0</strong> SCANS | <strong id="stat-threats" style="color:var(--accent-red);">0</strong> BLOCKED</span>
+      <a class="dash-link" href="http://localhost:3000" target="_blank">DASHBOARD ↗</a>
     </div>
-    <div class="stat-card">
-      <div class="stat-value threat-color" id="stat-threats">—</div>
-      <div class="stat-label">Threats Blocked</div>
-    </div>
+
   </div>
 
-  <!-- ── Footer ── -->
-  <div class="popup-footer">
-    <a class="footer-link" href="http://localhost:8000" target="_blank">
-      📊 Open Dashboard ↗
-    </a>
-    <span class="footer-version">v1.0.0</span>
-  </div>
-
-</div>
-<script src="popup.js"></script>
+  <script src="popup.js"></script>
 </body>
 </html>

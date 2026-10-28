@@ -28,7 +28,6 @@ export default function ScannerPage() {
   const [statsLoading, setStatsLoading] = useState(true);
   const resultRef = useRef<HTMLDivElement>(null);
 
-  // Load telemetry stats on mount
   useEffect(() => {
     async function loadStats() {
       try {
@@ -47,7 +46,6 @@ export default function ScannerPage() {
     const rawUrl = (targetUrl || url).trim();
     if (!rawUrl) return;
 
-    // Automatic protocol normalization
     let urlToScan = rawUrl;
     if (!urlToScan.startsWith('http://') && !urlToScan.startsWith('https://')) {
       urlToScan = `https://${urlToScan}`;
@@ -61,11 +59,9 @@ export default function ScannerPage() {
     try {
       const data = await scanUrl(urlToScan);
       setResult(data);
-      // Smooth scroll to results
       setTimeout(() => {
         resultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }, 150);
-      // Refresh stats
       const updatedStats = await getStats();
       setStats(updatedStats);
     } catch (err: any) {
@@ -89,7 +85,6 @@ export default function ScannerPage() {
 
   return (
     <div className="space-y-12">
-      {/* Neo-Brutalist Hero Section (Bright High-Contrast Text) */}
       <div className="relative text-left max-w-4xl mx-auto pt-4 pb-2 space-y-4">
         <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#ccff00] text-black border-2 border-black font-mono text-xs font-black uppercase shadow-[3px_3px_0px_0px_#ffffff]">
           <Terminal className="w-3.5 h-3.5 text-black" />
@@ -109,7 +104,6 @@ export default function ScannerPage() {
         </p>
       </div>
 
-      {/* Main Scanner Input (High Contrast Brutalist Card) */}
       <div className="max-w-4xl mx-auto">
         <div className="p-4 sm:p-5 bg-white border-[3px] border-white shadow-[6px_6px_0px_0px_#facc15] relative text-black">
           <div className="flex flex-col sm:flex-row items-stretch gap-3">
@@ -155,7 +149,6 @@ export default function ScannerPage() {
             </button>
           </div>
 
-          {/* Quick Test Samples */}
           <div className="mt-4 pt-3 border-t-2 border-black flex flex-wrap items-center gap-2 text-xs font-mono">
             <span className="font-black text-black uppercase mr-1 flex items-center gap-1">
               <Zap className="w-3.5 h-3.5 fill-[#facc15]" />
@@ -196,7 +189,6 @@ export default function ScannerPage() {
           </div>
         </div>
 
-        {/* Live Analysis Pipeline Flow Indicator (Shown while scanning) */}
         {scanning && (
           <div className="mt-4 p-4 bg-[#141624] border-2 border-white shadow-[4px_4px_0px_0px_#ccff00] text-white font-mono space-y-3 animate-in fade-in duration-200">
             <div className="flex items-center justify-between text-xs font-black">
@@ -227,7 +219,6 @@ export default function ScannerPage() {
           </div>
         )}
 
-        {/* Error notification banner */}
         {error && (
           <div className="mt-4 p-4 bg-[#ff3366] text-white border-2 border-white shadow-[4px_4px_0px_0px_#ffffff] flex items-center gap-3">
             <AlertOctagon className="w-6 h-6 shrink-0" />
@@ -236,14 +227,12 @@ export default function ScannerPage() {
         )}
       </div>
 
-      {/* Scanned Result Output */}
       {result && (
         <div ref={resultRef} className="max-w-7xl mx-auto scroll-mt-24">
           <ScanResult result={result} />
         </div>
       )}
 
-      {/* Brutalist Telemetry Grid */}
       <div className="max-w-5xl mx-auto pt-6">
         <div className="flex items-center gap-2 mb-4 font-mono font-black text-xs uppercase tracking-wider text-[#facc15]">
           <Activity className="w-4 h-4 text-[#facc15]" />
@@ -251,7 +240,6 @@ export default function ScannerPage() {
         </div>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          {/* Card 1: Total Scans */}
           <div className="p-4 bg-[#facc15] text-black border-[3px] border-white shadow-[6px_6px_0px_0px_#ffffff]">
             <div className="text-[11px] font-mono font-black uppercase tracking-wider text-black">
               TOTAL SCANS LOGGED
@@ -264,7 +252,6 @@ export default function ScannerPage() {
             </div>
           </div>
 
-          {/* Card 2: Threats Stopped */}
           <div className="p-4 bg-[#ff3366] text-white border-[3px] border-white shadow-[6px_6px_0px_0px_#ffffff]">
             <div className="text-[11px] font-mono font-black uppercase tracking-wider text-white">
               THREATS DETECTED
@@ -277,7 +264,6 @@ export default function ScannerPage() {
             </div>
           </div>
 
-          {/* Card 3: Detection Rate */}
           <div className="p-4 bg-[#22c55e] text-black border-[3px] border-white shadow-[6px_6px_0px_0px_#ffffff]">
             <div className="text-[11px] font-mono font-black uppercase tracking-wider text-black">
               LIVE ACCURACY RATE
@@ -290,7 +276,6 @@ export default function ScannerPage() {
             </div>
           </div>
 
-          {/* Card 4: Blockchain Blocks */}
           <div className="p-4 bg-[#c084fc] text-black border-[3px] border-white shadow-[6px_6px_0px_0px_#ffffff]">
             <div className="text-[11px] font-mono font-black uppercase tracking-wider text-black">
               BLOCKCHAIN HEIGHT

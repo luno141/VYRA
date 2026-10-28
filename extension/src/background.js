@@ -75,10 +75,15 @@ async function scanUrl(url) {
 
     const result = await response.json();
 
-    // Persist in memory cache
+    if (!result.shap_features && Array.isArray(result.shap_explanations)) {
+      result.shap_features = {};
+      result.shap_explanations.forEach((item) => {
+        result.shap_features[item.feature] = item.shap_value;
+      });
+    }
+
     scanCache.set(url, { result, timestamp: Date.now() });
 
-    // Persist in chrome.storage so popup/content can read it
     const storageKey = `scan_${url}`;
     await chrome.storage.local.set({
       [storageKey]: { ...result, scannedAt: Date.now() },

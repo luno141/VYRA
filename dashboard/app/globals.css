@@ -18,13 +18,11 @@ body {
   overflow-x: hidden;
 }
 
-/* Dark Neo-Brutalist Dot Matrix Canvas */
 .neo-grid {
   background-size: 24px 24px;
   background-image: radial-gradient(rgba(255, 255, 255, 0.12) 1.5px, transparent 1.5px);
 }
 
-/* Neo-Brutalist Striped Hazard Bars */
 .neo-hazard-red {
   background: repeating-linear-gradient(
     -45deg,
@@ -55,7 +53,6 @@ body {
   );
 }
 
-/* Dark Neo-Brutalist Card Helpers */
 .neo-card {
   background-color: #12141e;
   color: #ffffff;
@@ -94,7 +91,6 @@ body {
   font-family: var(--font-geist-mono), monospace;
 }
 
-/* Custom Neo Scrollbars */
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
